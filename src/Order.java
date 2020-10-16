@@ -1,42 +1,29 @@
-public class Order {
-	// physical dimensions: w*h*l
-	private int[] dimensions;
-	private int weight;
-	private String name;
+import java.util.Vector;
 
-	public Order(int[] dimensions, Integer weight, String name) {
-		this.dimensions = dimensions;
-		this.weight = weight;
-		this.name = name;
-	}
+public class Order {
+	private Vector<Item> items;
 
 	public Order() {
-		this.dimensions = new int[] { 1, 2, 3 };
-		this.weight = 0;
-		this.name = "No-name";
+		this.items = new Vector<Item>();
 	}
 
-	public void setWeight(Integer weight) {
-		this.weight = weight;
+	public void addItem(Item item) {
+		this.items.add(item);
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void removeItem(Item item) {
+		this.items.remove(item);
 	}
 
-	public void setDimensions(int[] dimensions) {
-		this.dimensions = dimensions;
+	public Vector<Item> getItems() {
+		return this.items;
 	}
 
 	public int getWeight() {
-		return this.weight;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public int[] getDimensions() {
-		return this.dimensions;
+		int totalWeight = 0;
+		for (Item item : items) {
+			totalWeight += item.getWeight();
+		}
+		return totalWeight;
 	}
 }
