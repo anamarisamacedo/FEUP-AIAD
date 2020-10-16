@@ -42,4 +42,8 @@ public class Order {
 	public PriorityType getPriority() {
 		return this.priority;
 	}
+
+	public void setPriority(PriorityType priority) {
+		this.priority = priority;
+	}
 }
