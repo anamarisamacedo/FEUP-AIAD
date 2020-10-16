@@ -1,5 +1,9 @@
 import java.util.Vector;
 
+/*
+ * ORDER CLASS IS COMPOSED ONLY OF THE ITEMS BOUGHT
+ * Maybe add priority? High-priority, regular mail, etc	
+ * */
 public class Order {
 	private Vector<Item> items;
 

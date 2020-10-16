@@ -1,5 +1,8 @@
 import jade.core.Agent;
 
+/*
+ * DUMMY AGENT, USED ONLY FOR DEBUGGING CLASSES IN DEVELOPMENT
+ * */
 public class ClassTesterAgent extends Agent {
 	public void setup() {
 		Order newOrder = new Order();
