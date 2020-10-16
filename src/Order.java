@@ -2,13 +2,21 @@ import java.util.Vector;
 
 /*
  * ORDER CLASS IS COMPOSED ONLY OF THE ITEMS BOUGHT
- * Maybe add priority? High-priority, regular mail, etc	
+ * Maybe add priority? High-priority, regular mail, etc 	
  * */
 public class Order {
 	private Vector<Item> items;
 
+	private PriorityType priority;
+
 	public Order() {
 		this.items = new Vector<Item>();
+		this.priority = PriorityType.normal;
+	}
+
+	public Order(PriorityType priority) {
+		this.items = new Vector<Item>();
+		this.priority = priority;
 	}
 
 	public void addItem(Item item) {
@@ -29,5 +37,9 @@ public class Order {
 			totalWeight += item.getWeight();
 		}
 		return totalWeight;
+	}
+
+	public PriorityType getPriority() {
+		return this.priority;
 	}
 }
