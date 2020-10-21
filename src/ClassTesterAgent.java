@@ -12,6 +12,7 @@ public class ClassTesterAgent extends Agent {
 		newOrder.addItem(newItem2);
 		System.out.println("Order weight: " + newOrder.getWeight());
 		System.out.println("Order priority: " + newOrder.getPriority());
+		System.out.println("Order date: " + newOrder.getDate());
 		newOrder.setPriority(PriorityType.normal);
 		System.out.println("Order priority: " + newOrder.getPriority());
 	}

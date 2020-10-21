@@ -1,22 +1,24 @@
-import java.util.Vector;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 /*
  * ORDER CLASS IS COMPOSED ONLY OF THE ITEMS BOUGHT
- * Maybe add priority? High-priority, regular mail, etc 	
  * */
 public class Order {
-	private Vector<Item> items;
-
+	private List<Item> items;
+	private LocalDateTime date;
 	private PriorityType priority;
 
 	public Order() {
-		this.items = new Vector<Item>();
+		this.items = new ArrayList<Item>();
 		this.priority = PriorityType.normal;
+		this.date = LocalDateTime.now();
 	}
 
 	public Order(PriorityType priority) {
-		this.items = new Vector<Item>();
+		this.items = new ArrayList<Item>();
 		this.priority = priority;
+		this.date = LocalDateTime.now();
 	}
 
 	public void addItem(Item item) {
@@ -27,8 +29,14 @@ public class Order {
 		this.items.remove(item);
 	}
 
-	public Vector<Item> getItems() {
+	public List<Item> getItems() {
 		return this.items;
+	}
+	
+	public String getDate()
+	{
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+		return this.date.format(dateFormatter);
 	}
 
 	public int getWeight() {
