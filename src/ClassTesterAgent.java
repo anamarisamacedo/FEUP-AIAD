@@ -5,7 +5,7 @@ import jade.core.Agent;
  * */
 public class ClassTesterAgent extends Agent {
 	public void setup() {
-		Order newOrder = new Order(PriorityType.high);
+		Order newOrder = new Order(PriorityType.normal);
 		Item newItem1 = new Item(new int[] { 1, 2, 3 }, 4, "First");
 		Item newItem2 = new Item(new int[] { 5, 6, 7 }, 8, "Second");
 		newOrder.addItem(newItem1);
@@ -13,7 +13,7 @@ public class ClassTesterAgent extends Agent {
 		System.out.println("Order weight: " + newOrder.getWeight());
 		System.out.println("Order priority: " + newOrder.getPriority());
 		System.out.println("Order date: " + newOrder.getDate());
-		newOrder.setPriority(PriorityType.normal);
+		newOrder.setPriority(PriorityType.high);
 		System.out.println("Order priority: " + newOrder.getPriority());
 	}
 }

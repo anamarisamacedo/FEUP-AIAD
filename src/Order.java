@@ -7,18 +7,16 @@ import java.util.*;
 public class Order {
 	private List<Item> items;
 	private LocalDateTime date;
-	private PriorityType priority;
-
+	private PriorityType priority = PriorityType.normal;
+	
 	public Order() {
 		this.items = new ArrayList<Item>();
-		this.priority = PriorityType.normal;
 		this.date = LocalDateTime.now();
 	}
 
 	public Order(PriorityType priority) {
-		this.items = new ArrayList<Item>();
+		this();
 		this.priority = priority;
-		this.date = LocalDateTime.now();
 	}
 
 	public void addItem(Item item) {
