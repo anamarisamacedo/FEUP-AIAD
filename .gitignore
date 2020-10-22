@@ -1,4 +1,4 @@
-bin/
+.bin/
 .metadata/
 .settings/
 .project
