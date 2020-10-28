@@ -1,11 +1,15 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import java.io.Serializable;
 /*
  * ORDER CLASS IS COMPOSED ONLY OF THE ITEMS BOUGHT
  * */
-public class Order {
-	private List<Item> items;
+public class Order implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	private ArrayList<Item> items;
 	private LocalDateTime date;
 	private PriorityType priority = PriorityType.normal;
 	
@@ -27,7 +31,7 @@ public class Order {
 		this.items.remove(item);
 	}
 
-	public List<Item> getItems() {
+	public ArrayList<Item> getItems() {
 		return this.items;
 	}
 	

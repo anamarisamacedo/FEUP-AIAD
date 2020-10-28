@@ -3,6 +3,8 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,11 +26,16 @@ public class OrderFactoryAgent extends Agent {
 		
 		protected ACLMessage handleRequest(ACLMessage request) {
 			ACLMessage reply = request.createReply();
-			System.out.println("This is what i got: " + request.getContent());
-			List<Order> orders = createRandomOrders(10);
-			
-			//smth like this \/ 
-			//reply.addObject(orders) 
+			ArrayList<Order> orders = createRandomOrders(10);
+						
+			try {
+				reply.setContentObject((Serializable)orders);
+	         } catch (IOException ex) {
+	             System.err.println("Cannot add Order to message. Sending empty message.");
+	             ex.printStackTrace(System.err);
+	         }
+
+
 			reply.setPerformative(ACLMessage.AGREE);
 			return reply;
 		}
@@ -40,7 +47,7 @@ public class OrderFactoryAgent extends Agent {
 			return result;
 		}
 		
-		private List<Order> createRandomOrders(int totalOrders)
+		private ArrayList<Order> createRandomOrders(int totalOrders)
 		{
 			//This should probably be sent by the ClientAgent in the request,
 			//and then passed here
@@ -58,7 +65,7 @@ public class OrderFactoryAgent extends Agent {
 			Random r = new Random();
 			
 			//list of all the orders generated
-			List<Order> orders = new ArrayList<Order>();
+			ArrayList<Order> orders = new ArrayList<Order>();
 			
 			//Create nr of orders requested
 			for(int i = 0; i < totalOrders; i++)

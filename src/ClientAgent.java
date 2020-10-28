@@ -1,7 +1,10 @@
 import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
 import jade.proto.AchieveREInitiator;
+
+import java.util.ArrayList;
 import java.util.Vector;
 
 /*
@@ -29,7 +32,14 @@ public class ClientAgent extends Agent {
 		}
 		
 		protected void handleAgree(ACLMessage agree) {
-			System.out.println(agree);
+			System.out.println("This is what arrived: ");
+			ArrayList<Order> orders = null;
+			try {
+				orders = (ArrayList<Order>)(agree.getContentObject());
+			} catch (UnreadableException e) {
+				e.printStackTrace();
+			}// TODO Auto-generated catch block
+			System.out.println(orders.get(0).getDate());
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {

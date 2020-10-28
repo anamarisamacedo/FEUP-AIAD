@@ -1,10 +1,16 @@
-public class Item {
+import java.io.Serializable;
+
+public class Item implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2L;
 	// physical dimensions: w*h*l
 	private int[] dimensions;
 	private int weight;
 	private String name;
 
-	public Item(int[] dimensions, Integer weight, String name) {
+	public Item(int[] dimensions, Integer weight, String name){
 		this.dimensions = dimensions;
 		this.weight = weight;
 		this.name = name;
