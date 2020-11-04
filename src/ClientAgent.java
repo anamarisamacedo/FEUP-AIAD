@@ -25,6 +25,7 @@ public class ClientAgent extends Agent {
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
+			//get receiver by type, not name
 			msg.addReceiver(new AID("OFAgent", false));
 			msg.setContent("I need 10 random orders!");
 			v.add(msg);
@@ -38,7 +39,7 @@ public class ClientAgent extends Agent {
 				orders = (ArrayList<Order>)(agree.getContentObject());
 			} catch (UnreadableException e) {
 				e.printStackTrace();
-			}// TODO Auto-generated catch block
+			}
 			System.out.println(orders.get(0).getDate());
 		}
 		

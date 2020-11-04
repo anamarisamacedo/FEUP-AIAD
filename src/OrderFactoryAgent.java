@@ -83,7 +83,7 @@ public class OrderFactoryAgent extends Agent {
 			
 					String name = "Item" + Integer.toString(i);
 					
-					newOrder.addItem(new Item(new int[] { height, weight, width }, weight, name));
+					newOrder.addItem(new Item(new int[] { width, height, length }, weight, name));
 				}
 				orders.add(newOrder);
 			}
