@@ -18,6 +18,7 @@ public class DistributorAgent extends Agent {
 		addBehaviour(new FIPARequestResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
 	}
 	
+	//Receives requests from the supplier
 	class FIPARequestResp extends AchieveREResponder {
 
 		public FIPARequestResp(Agent a, MessageTemplate mt) {
@@ -27,13 +28,7 @@ public class DistributorAgent extends Agent {
 		protected ACLMessage handleRequest(ACLMessage request) {
 			ACLMessage reply = request.createReply();
 						
-			/*try {
-				reply.setContentObject();
-	         } catch (IOException ex) {
-	             System.err.println("Cannot add Order to message. Sending empty message.");
-	             ex.printStackTrace(System.err);
-	         }*/
-
+		
 
 			reply.setPerformative(ACLMessage.AGREE);
 			return reply;
@@ -42,7 +37,6 @@ public class DistributorAgent extends Agent {
 		protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) {
 			ACLMessage result = request.createReply();
 			result.setPerformative(ACLMessage.INFORM);
-			result.setContent("here you go!");
 			return result;
 		}
 		
