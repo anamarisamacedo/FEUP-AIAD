@@ -1,7 +1,7 @@
-APDescription.txt
-MTPs-Main-Container.txt
 .classpath
 .project
 bin/
-.metadata/
-.settings/
+bin/src/
+APDescription.txt
+MTPs-Main-Container.txt
+*.class
