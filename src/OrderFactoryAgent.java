@@ -16,6 +16,7 @@ public class OrderFactoryAgent extends Agent {
 
 	public void setup() {
 		addBehaviour(new FIPARequestResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
+		System.out.println("Factory created!!");
 	}
 	
 	class FIPARequestResp extends AchieveREResponder {

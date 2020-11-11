@@ -14,8 +14,7 @@ import java.util.Vector;
 public class ClientAgent extends Agent {
 
 	public void setup() {
-		addBehaviour(new FIPARequestInit(this, new ACLMessage(ACLMessage.REQUEST)));
-	}
+		addBehaviour(new FIPARequestInit(this, new ACLMessage(ACLMessage.REQUEST))); }
 	
 	class FIPARequestInit extends AchieveREInitiator {
 
@@ -33,16 +32,16 @@ public class ClientAgent extends Agent {
 		}
 		
 		protected void handleAgree(ACLMessage agree) {
-			System.out.println("This is what arrived: ");
+			System.out.println("Received the orders!");
 			ArrayList<Order> orders = null;
 			try {
 				orders = (ArrayList<Order>)(agree.getContentObject());
 			} catch (UnreadableException e) {
 				e.printStackTrace();
 			}
-			System.out.println("Got the orders, here is the date of the first: " + orders.get(0).getDate());
-			System.out.println("And here is the location of the first: " + orders.get(0).getLocation().getLat() + ", " + orders.get(0).getLocation().getLon());
+
 			System.out.println("Gonna send them to the supplier");
+			//send order array
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
