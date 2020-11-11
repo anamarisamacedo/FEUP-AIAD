@@ -14,7 +14,9 @@ import java.util.Vector;
 public class ClientAgent extends Agent {
 
 	public void setup() {
-		addBehaviour(new FIPARequestInit(this, new ACLMessage(ACLMessage.REQUEST))); }
+		addBehaviour(new FIPARequestInit(this, new ACLMessage(ACLMessage.REQUEST)));
+		System.out.println("AGENT IS ALIVE");
+	}
 	
 	class FIPARequestInit extends AchieveREInitiator {
 

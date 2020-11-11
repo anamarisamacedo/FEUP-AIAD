@@ -13,7 +13,7 @@ public class ClientFactory extends Agent {
         for(int i = 0; i < totalClients; i++)
         {
             try {
-                getContainerController().createNewAgent("Client-" + Integer.toString(i), "ClientAgent", null);
+                getContainerController().createNewAgent("Client-" + Integer.toString(i), "ClientAgent", null).activate();
             }
             catch(StaleProxyException e) {e.printStackTrace();}
         }
