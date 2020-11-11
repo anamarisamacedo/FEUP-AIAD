@@ -4,7 +4,8 @@ import java.util.*;
 class Distributor  
 {
 	public void allocate() {
-		/*receives list of orders
+		/*
+		 * receives list of orders
 		 * and fills necessary vehicles with the orders until full capacity
 		 * then, calls path with the locations each vehicle is assigned
 		 */
