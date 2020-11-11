@@ -50,6 +50,7 @@ public class ClientAgent extends Agent {
 			int lat = r.nextInt((maxLat-minLat)+1)+minLat;
 			int longit = r.nextInt((maxLon-minLon)+1)+minLon;
 			newOrder.setLocation(new Location(lat, longit));
+			newOrder.setClientID(this.getAID());
 
 			//random nr of items for each order
 			int itemNr = r.nextInt(maxItems);
