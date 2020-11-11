@@ -12,10 +12,12 @@ public class Order implements Serializable{
 	private ArrayList<Item> items;
 	private LocalDateTime date;
 	private PriorityType priority = PriorityType.normal;
+	private Location location;
 	
 	public Order() {
 		this.items = new ArrayList<Item>();
 		this.date = LocalDateTime.now();
+		this.location = new Location(0, 0);
 	}
 
 	public Order(PriorityType priority) {
@@ -56,4 +58,8 @@ public class Order implements Serializable{
 	public void setPriority(PriorityType priority) {
 		this.priority = priority;
 	}
+
+	public Location getLocation() {return this.location;}
+
+	public void setLocation(Location location) {this.location = location;}
 }

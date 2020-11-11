@@ -34,8 +34,6 @@ public class OrderFactoryAgent extends Agent {
 	             System.err.println("Cannot add Order to message. Sending empty message.");
 	             ex.printStackTrace(System.err);
 	         }
-
-
 			reply.setPerformative(ACLMessage.AGREE);
 			return reply;
 		}
@@ -60,6 +58,10 @@ public class OrderFactoryAgent extends Agent {
 			int minLength = 20;
 			int maxLength = 40;
 			int maxItems = 5;
+			int minLat = 0;
+			int maxLat = 1000;
+			int minLon = 0;
+			int maxLon = 1000;
 			
 			//will be used to generate random nrs
 			Random r = new Random();
@@ -71,6 +73,10 @@ public class OrderFactoryAgent extends Agent {
 			for(int i = 0; i < totalOrders; i++)
 			{				
 				Order newOrder = new Order();
+				int lat = r.nextInt((maxLat-minLat)+1)+minLat;
+				int longit = r.nextInt((maxLon-minLon)+1)+minLon;
+				newOrder.setLocation(new Location(lat, longit));
+
 				//random nr of items for each order
 				int itemNr = r.nextInt(maxItems);
 				
@@ -80,7 +86,6 @@ public class OrderFactoryAgent extends Agent {
 					int height = r.nextInt((maxHeight-minHeight)+1)+minHeight;
 					int width = r.nextInt((maxWidth-minWidth)+1)+minWidth;
 					int length = r.nextInt((maxLength-minLength)+1)+minLength;
-			
 					String name = "Item" + Integer.toString(i);
 					
 					newOrder.addItem(new Item(new int[] { width, height, length }, weight, name));

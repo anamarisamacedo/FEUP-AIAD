@@ -40,7 +40,9 @@ public class ClientAgent extends Agent {
 			} catch (UnreadableException e) {
 				e.printStackTrace();
 			}
-			System.out.println(orders.get(0).getDate());
+			System.out.println("Got the orders, here is the date of the first: " + orders.get(0).getDate());
+			System.out.println("And here is the location of the first: " + orders.get(0).getLocation().getLat() + ", " + orders.get(0).getLocation().getLon());
+			System.out.println("Gonna send them to the supplier");
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
