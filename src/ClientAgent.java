@@ -18,9 +18,11 @@ import java.util.Vector;
 public class ClientAgent extends Agent {
 
 	ArrayList<Order> orders = null;
-	AID clientID = this.getAID();
+	String clientID = null;
 	
 	public void setup() {
+		clientID = this.getAID().getLocalName();
+		orders = createRandomOrders(10);
 		addBehaviour(new FIPARequestInitToSupplier(this, new ACLMessage(ACLMessage.REQUEST)));
 	}
 	
@@ -31,16 +33,14 @@ public class ClientAgent extends Agent {
 		}
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
-			orders = createRandomOrders(10);
-			System.out.format("Client created 10 orders, the first one has this location: %d, %d\n", orders.get(0).getLocation().getLon(), orders.get(0).getLocation().getLat());
-			System.out.println("Client: I'm gonna ask the supplier for the orders");
+			System.out.format("%s: I'm gonna ask the supplier for 10 orders. The first order has this location: %d, %d\n", clientID, orders.get(0).getLocation().getLon(), orders.get(0).getLocation().getLat());
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
 			//get receiver by type, not name
 			msg.addReceiver(new AID("SupAgent", false));
 			try {
 				msg.setContentObject((Serializable)orders);
 			} catch (IOException e) {
-				System.err.println("Client: Cannot make orders");
+				System.err.format("%s: Cannot make orders", clientID);
 				e.printStackTrace();
 			}
 			v.add(msg);
@@ -48,7 +48,7 @@ public class ClientAgent extends Agent {
 		}
 		
 		protected void handleAgree(ACLMessage agree) {
-			System.out.println("Ok, thank you!");			
+			System.out.println(clientID + ": " + agree);		
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {

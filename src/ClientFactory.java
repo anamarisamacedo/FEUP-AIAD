@@ -12,6 +12,6 @@ public class ClientFactory extends Agent {
             }
             catch(StaleProxyException e) {e.printStackTrace();}
         }
-        System.out.println("Created " + Integer.toString(totalClients) + " agents");
+        System.out.println("ClientFactory: Created " + Integer.toString(totalClients) + " agents");
     }
 }
