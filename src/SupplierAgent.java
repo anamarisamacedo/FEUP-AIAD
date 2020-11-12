@@ -6,6 +6,7 @@ import jade.lang.acl.UnreadableException;
 import jade.proto.AchieveREInitiator;
 import jade.proto.AchieveREResponder;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,25 +14,29 @@ import java.util.Vector;
 
 public class SupplierAgent extends Agent {
 
+	ArrayList<Order> orders = null; 
+	SupplierAgent supAgent = this;
+	String clientID = null;
+	
 	public void setup() {
-		addBehaviour(new FIPARequestResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
+		addBehaviour(new FIPARequestClientResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
 		System.out.println("Supplier active!!");
-		//addBehaviour(new FIPARequestInit(this, new ACLMessage(ACLMessage.REQUEST)));
 	}
 	
 
-	class FIPARequestResp extends AchieveREResponder {
+	class FIPARequestClientResp extends AchieveREResponder {
 
-		public FIPARequestResp(Agent a, MessageTemplate mt) {
+		public FIPARequestClientResp(Agent a, MessageTemplate mt) {
 			super(a, mt);
 		}
 		
 		protected ACLMessage handleRequest(ACLMessage request) {
 			try {
-				ArrayList<Order> orders = (ArrayList<Order>)(request.getContentObject());
+				orders = (ArrayList<Order>)(request.getContentObject());
+				clientID = request.getSender().getLocalName();
 				Arrays.toString(orders.toArray());
-				//send order array
-				//addBehaviour( new FIPARequestSupplierInit(this, new ACLMessage(ACLMessage.REQUEST), orders )); 
+				//send order array to distributor
+				addBehaviour( new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST))); 
 				
 			} catch (UnreadableException e) {
 				e.printStackTrace();
@@ -49,32 +54,28 @@ public class SupplierAgent extends Agent {
 		}
 
 	}
-	/*
-	class FIPARequestInit extends AchieveREInitiator {
+	
+	class FIPARequestDistributorInit extends AchieveREInitiator {
 
-		public FIPARequestInit(Agent a, ACLMessage msg) {
+		public FIPARequestDistributorInit(Agent a, ACLMessage msg) {
 			super(a, msg);
 		}
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
-			msg.addReceiver(new AID("DistributorAgent", false));
-			msg.setContent("Distribute this 10 orders!");
+			msg.addReceiver(new AID("DistAgent", false));
+			try {
+				msg.setContentObject((Serializable)orders);
+			} catch (IOException e) {
+				System.err.format("Cannot send %s orders to distributor", clientID);
+				e.printStackTrace();
+			}
 			v.add(msg);
 			return v;
 		}
 		
 		protected void handleAgree(ACLMessage agree) {
-			ArrayList<Order> orders = null;
-			try {
-				orders = (ArrayList<Order>)(agree.getContentObject());
-				System.out.println("Received the orders! Gonna send them to the supplier");
-				//send order array
-				//addBehaviour( new FIPARequestSupplierInit(this, new ACLMessage(ACLMessage.REQUEST), orders )); 
-				
-			} catch (UnreadableException e) {
-				e.printStackTrace();
-			}	
+			System.out.println(agree);
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
@@ -89,7 +90,7 @@ public class SupplierAgent extends Agent {
 			System.out.println(failure);
 		}
 
-	}*/
+	}
 	
 
 }
