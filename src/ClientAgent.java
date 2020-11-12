@@ -1,24 +1,71 @@
+
 import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 import jade.proto.AchieveREInitiator;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
 
 /*
- * Simulate a costumer. Will ask orderfactory to generate orders,
+ * Simulate a costumer (created by ClientFactory Agent)
  * and make a purchase (request to the supplier)
  * */
 public class ClientAgent extends Agent {
 
+	ArrayList<Order> orders = null;
+	AID clientID = this.getAID();
+	
 	public void setup() {
-		ArrayList<Order> orders = createRandomOrders(10);
-		System.out.format("Created 10 orders, the first one has this location: %d, %d\n", orders.get(0).getLocation().getLon(), orders.get(0).getLocation().getLat());
+		addBehaviour(new FIPARequestInitToSupplier(this, new ACLMessage(ACLMessage.REQUEST)));
 	}
+	
+	class FIPARequestInitToSupplier extends AchieveREInitiator {
 
+		public FIPARequestInitToSupplier(Agent a, ACLMessage msg) {
+			super(a, msg);
+		}
+
+		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
+			orders = createRandomOrders(10);
+			System.out.format("Client created 10 orders, the first one has this location: %d, %d\n", orders.get(0).getLocation().getLon(), orders.get(0).getLocation().getLat());
+			System.out.println("Client: I'm gonna ask the supplier for the orders");
+			Vector<ACLMessage> v = new Vector<ACLMessage>();
+			//get receiver by type, not name
+			msg.addReceiver(new AID("SupAgent", false));
+			try {
+				msg.setContentObject((Serializable)orders);
+			} catch (IOException e) {
+				System.err.println("Client: Cannot make orders");
+				e.printStackTrace();
+			}
+			v.add(msg);
+			return v;
+		}
+		
+		protected void handleAgree(ACLMessage agree) {
+			System.out.println("Ok, thank you!");			
+		}
+		
+		protected void handleRefuse(ACLMessage refuse) {
+			System.out.println(refuse);
+			}
+		
+		protected void handleInform(ACLMessage inform) {
+			System.out.println(inform);
+			}
+		
+		protected void handleFailure(ACLMessage failure) {
+			System.out.println(failure);
+		}
+		
+
+	}
+	
 	private ArrayList<Order> createRandomOrders(int totalOrders)
 	{
 		//This should probably be sent by the ClientAgent in the request,
@@ -69,5 +116,6 @@ public class ClientAgent extends Agent {
 		}
 		return orders;
 	}
+	
 	
 }
