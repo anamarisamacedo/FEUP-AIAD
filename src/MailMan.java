@@ -1,6 +1,7 @@
 public class MailMan extends Vehicle {
-    public MailMan(int id) {
-        super(id);
-        this.capacity = 0;
+    public MailMan() {
+        super();
+        this.capacity = 15;
+        this.baseSpeed = 8;
     }
 }

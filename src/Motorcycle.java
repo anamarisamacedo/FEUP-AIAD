@@ -1,7 +1,8 @@
 
 public class Motorcycle extends Vehicle {
-    public Motorcycle(int id) {
-        super(id);
-        this.capacity = 0;
+    public Motorcycle() {
+        super();
+        this.capacity = 50;
+        this.baseSpeed = 60;
     }
 }
