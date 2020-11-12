@@ -3,11 +3,34 @@ import java.util.*;
 
 class Distributor  
 {
-	public void allocate() {
+	private List<Order> orders = new ArrayList<>();
+	
+	public Vehicle generateVehicle() {
+		
+	}
+	
+	public void allocate(List<Order> orders) {
+		this.orders = orders;
+		
+		Vehicle vehicle;
+		List<Vehicle> fleet = new ArrayList<>();
+		
+		while(this.orders.size() > 0) {
+			
+		}
+		
 		/*
-		 * receives list of orders
+		 * 
 		 * and fills necessary vehicles with the orders until full capacity
 		 * then, calls path with the locations each vehicle is assigned
+		 * 
+		 * ListIterator<Book> iter = books.listIterator();
+			while(iter.hasNext()){
+    			if(iter.next().getIsbn().equals(isbn)){
+        			iter.remove();
+    			}
+			}
+		 * 
 		 */
 	}
 	

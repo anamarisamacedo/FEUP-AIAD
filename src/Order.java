@@ -1,3 +1,5 @@
+import jade.core.AID;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -12,10 +14,13 @@ public class Order implements Serializable{
 	private ArrayList<Item> items;
 	private LocalDateTime date;
 	private PriorityType priority = PriorityType.normal;
+	private Location location;
+	private AID clientID;
 	
 	public Order() {
 		this.items = new ArrayList<Item>();
 		this.date = LocalDateTime.now();
+		this.location = new Location(0, 0);
 	}
 
 	public Order(PriorityType priority) {
@@ -56,4 +61,12 @@ public class Order implements Serializable{
 	public void setPriority(PriorityType priority) {
 		this.priority = priority;
 	}
+
+	public Location getLocation() {return this.location;}
+
+	public void setLocation(Location location) {this.location = location;}
+
+	public AID getClientID(){return this.clientID;}
+
+	public void setClientID(AID clientID) {this.clientID = clientID;}
 }

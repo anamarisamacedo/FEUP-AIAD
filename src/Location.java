@@ -1,26 +1,28 @@
+import java.io.Serializable;
 
-public class Location {
-	private double lat; //x
-	private double lon; //y
+public class Location implements Serializable {
+	private int lat; //x
+	private int lon; //y
+	private static final long serialVersionUID = 3L;
 	
-	public Location(double lat, double lon) {
+	public Location(int lat, int lon) {
 		this.setLat(lat);
 		this.setLon(lon);
 	}
 
-	public double getLat() {
+	public int getLat() {
 		return lat;
 	}
 
-	public void setLat(double lat) {
+	public void setLat(int lat) {
 		this.lat = lat;
 	}
 
-	public double getLon() {
+	public int getLon() {
 		return lon;
 	}
 
-	public void setLon(double lon) {
+	public void setLon(int lon) {
 		this.lon = lon;
 	}
 	
