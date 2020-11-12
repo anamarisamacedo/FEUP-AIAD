@@ -1,4 +1,8 @@
 import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -18,6 +22,8 @@ public class DistributorAgent extends Agent {
 
     public void setup() {
         addBehaviour(new FIPARequestResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
+
+        HelperClass.registerAgent(this, "Distributor");
     }
 
     //Receives requests from the supplier

@@ -1,5 +1,13 @@
+import jade.content.onto.basic.Action;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
+import jade.domain.FIPANames;
+import jade.domain.JADEAgentManagement.JADEManagementOntology;
+import jade.domain.JADEAgentManagement.QueryAgentsOnLocation;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -21,8 +29,9 @@ public class SupplierAgent extends Agent {
 	public void setup() {
 		addBehaviour(new FIPARequestClientResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
 		System.out.println("Supplier active!!");
+
+		HelperClass.registerAgent(this, "Supplier");
 	}
-	
 
 	class FIPARequestClientResp extends AchieveREResponder {
 
@@ -34,7 +43,6 @@ public class SupplierAgent extends Agent {
 			try {
 				orders = (ArrayList<Order>)(request.getContentObject());
 				clientID = request.getSender().getLocalName();
-				Arrays.toString(orders.toArray());
 				//send order array to distributor
 				addBehaviour( new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST))); 
 				
@@ -52,7 +60,6 @@ public class SupplierAgent extends Agent {
 			result.setContent("Supplier: Request received! We will start sending the orders!");
 			return result;
 		}
-
 	}
 	
 	class FIPARequestDistributorInit extends AchieveREInitiator {
@@ -63,7 +70,8 @@ public class SupplierAgent extends Agent {
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
-			msg.addReceiver(new AID("DistAgent", false));
+			AID distrID = HelperClass.getAIDbyType(supAgent, "Distributor");
+			msg.addReceiver(distrID);
 			try {
 				msg.setContentObject((Serializable)orders);
 			} catch (IOException e) {
