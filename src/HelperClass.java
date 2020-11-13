@@ -11,7 +11,6 @@ public class HelperClass {
         DFAgentDescription dfd = new DFAgentDescription();
         ServiceDescription sd  = new ServiceDescription();
         //name of agent to search for (registered in setup)
-
         sd.setType(type);
         dfd.addServices(sd);
         DFAgentDescription[] result = null;
