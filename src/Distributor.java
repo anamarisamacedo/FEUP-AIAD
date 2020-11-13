@@ -5,6 +5,10 @@ class Distributor
 {
 	private List<Order> orders = new ArrayList<Order>();
 	
+	public Distributor(List<Order> orders) {
+		this.orders = orders;
+	}
+	
 	public Vehicle generateVehicle() {
 		Vehicle vehicle;
 		Random r = new Random();
@@ -22,15 +26,16 @@ class Distributor
 	}
 	
 	//TODO: location sent by supplier
-	public void allocate(List<Order> orders) {
-		this.orders = orders;
+	public List<Pair<Order, Double>> allocate() {
+		List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
 		
 		Vehicle vehicle;
 		List<Vehicle> fleet = new ArrayList<Vehicle>();
 		//TODO: vv temporary!!
 		Location source = new Location(0, 0);
 		
-		while(this.orders.size() > 0) {
+		int size = this.orders.size();
+		while(size > 0) {
 			vehicle = this.generateVehicle();
 			int occupancy = 0;
 			
@@ -41,15 +46,20 @@ class Distributor
 	    				vehicle.addOrder(iter.next());
 	    				occupancy += iter.next().getWeight();
 	        			iter.remove();
+	        			size--;
 	    			}
 				}
 			}
-			fleet.add(vehicle);
+			
+			if(vehicle.getOrders().size() > 0)
+				fleet.add(vehicle);
 		}
 		
 		for(int i = 0; i < fleet.size(); i++) {
-			this.path(fleet.get(i), source);
+			time_per_order.addAll(this.path(fleet.get(i), source));
 		}
+		
+		return time_per_order;
 	}
 	
 	public boolean finalized(boolean[] visited) {
@@ -62,7 +72,7 @@ class Distributor
 	}
 	
 	
-    public int path(Vehicle v, Location source) { 
+    public List<Pair<Order, Double>> path(Vehicle v, Location source) { 
     	//traveled distance
     	int dist = 0;
     	//location currently visiting
@@ -81,6 +91,9 @@ class Distributor
     	for (int i = 0; i < visited.length; i++) {
     	    visited[i] = false;
     	}
+    	
+    	//annexing a double time to each order
+    	List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
     	
     	PrintWriter pw = null;
     	String fName = String.format("vehicle%s.txt", v.getId());
@@ -116,17 +129,19 @@ class Distributor
 				visited[i] = true;
 				dist += distTo;
 				currLoc = temp;
-				double time = distTo / v.baseSpeed();
+				double time = dist / v.baseSpeed();
 				count++;
 				String print = 
 						String.format("Vehicle %s delivered to (Lat: %d Loc: %d) in %d place and took %f time;", v.getId(), currLoc.getLat(), currLoc.getLon(), count, time);
 				pw.println(print);
+				
+				time_per_order.add(new Pair<Order, Double>(v.getOrders().get(i), time));
     		}
     	}
     	
     	if(pw != null)
     		pw.close();
     	
-    	return dist;
+    	return time_per_order;
     }
 }
