@@ -1,4 +1,8 @@
 import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -11,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import org.javatuples.Pair;
 
 /*
  * Agent for the Distribution
@@ -21,6 +24,8 @@ public class DistributorAgent extends Agent {
 	Supplier supplier = new Supplier();
     public void setup() {
         addBehaviour(new FIPARequestResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
+
+        HelperClass.registerAgent(this, "Distributor");
     }
 
     //Receives requests from the supplier
@@ -32,12 +37,14 @@ public class DistributorAgent extends Agent {
 
         protected ACLMessage handleRequest(ACLMessage request) {
             try {
-                Pair<ArrayList<Order>, Location> message = (Pair<ArrayList<Order>, Location>)(request.getContentObject());
-                ArrayList<Order> orders = message.getValue0();
+            	//Get the content (pair with the orders array and the pickup location) of the received message
+                Pair<ArrayList<Order>, Location> requestMessage = (Pair<ArrayList<Order>, Location>)(request.getContentObject());
+                ArrayList<Order> orders = requestMessage.getFirst();
+                Location pickup = requestMessage.getSecond();
+                
                 System.out.println("Got the orders, here is the first's date: " + orders.get(0).getDate());
-                System.out.println("Location: " + message.getValue1().getLat() + ", " + message.getValue1().getLon());
-                //send order array
-                //addBehaviour( new FIPARequestSupplierInit(this, new ACLMessage(ACLMessage.REQUEST), orders ));
+                System.out.println("Got the location: " + requestMessage.getSecond().getLat() + ", " + requestMessage.getSecond().getLon());
+               
 
             } catch (UnreadableException e) {
                 e.printStackTrace();

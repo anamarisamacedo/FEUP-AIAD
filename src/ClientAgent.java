@@ -1,6 +1,10 @@
 
 import jade.core.AID;
 import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 import jade.proto.AchieveREInitiator;
@@ -19,11 +23,14 @@ public class ClientAgent extends Agent {
 
 	ArrayList<Order> orders = null;
 	String clientID = null;
+	Agent clientAgent = this;
 	
 	public void setup() {
 		clientID = this.getAID().getLocalName();
 		orders = createRandomOrders(2);
 		addBehaviour(new FIPARequestInitToSupplier(this, new ACLMessage(ACLMessage.REQUEST)));
+
+		HelperClass.registerAgent(this, "Client");
 	}
 	
 	class FIPARequestInitToSupplier extends AchieveREInitiator {
@@ -35,8 +42,14 @@ public class ClientAgent extends Agent {
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
 			System.out.format("%s: I'm gonna ask the supplier for 10 orders. The first order has this location: %d, %d\n", clientID, orders.get(0).getLocation().getLon(), orders.get(0).getLocation().getLat());
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
-			//get receiver by type, not name
-			msg.addReceiver(new AID("SupAgent", false));
+
+			AID supplierID = HelperClass.getAIDbyType(clientAgent, "Supplier");
+			if(supplierID == null)
+			{
+				System.out.println("No supplier found, aborting");
+				return v;
+			}
+			msg.addReceiver(supplierID);
 			try {
 				msg.setContentObject((Serializable)orders);
 			} catch (IOException e) {

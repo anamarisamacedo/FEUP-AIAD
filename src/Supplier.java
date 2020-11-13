@@ -17,7 +17,7 @@ public class Supplier {
 	}
 
 	public Location allocatePickUp(ArrayList<Order> orders) {
-		double minDist = 10000.0;
+		int minDist = 999999999;
 		Location pickupPoint = pickups.get(0);
 		
 		for (Location pick : this.pickups) {
@@ -25,6 +25,7 @@ public class Supplier {
 			for (Order order : orders) {
 				sumDist += pick.distanceTo(order.getLocation());
 			}
+			
 			if (sumDist < minDist) {
 				minDist = sumDist;
 				pickupPoint = pick;

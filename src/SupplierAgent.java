@@ -1,5 +1,13 @@
+import jade.content.onto.basic.Action;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
+import jade.domain.FIPANames;
+import jade.domain.JADEAgentManagement.JADEManagementOntology;
+import jade.domain.JADEAgentManagement.QueryAgentsOnLocation;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -17,7 +25,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.*;
-import org.javatuples.Pair;
 
 public class SupplierAgent extends Agent {
 
@@ -25,13 +32,13 @@ public class SupplierAgent extends Agent {
 	SupplierAgent supAgent = this;
 	Supplier supplier = new Supplier();
 	String clientID = null;
-	Pair<ArrayList<Order>, Location> sendingMessage;
 	
 	public void setup() {
 		addBehaviour(new FIPARequestClientResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
 		System.out.println("Supplier active!!");
+
+		HelperClass.registerAgent(this, "Supplier");
 	}
-	
 
 	class FIPARequestClientResp extends AchieveREResponder {
 
@@ -42,15 +49,12 @@ public class SupplierAgent extends Agent {
 		protected ACLMessage handleRequest(ACLMessage request) {
 			ACLMessage reply = request.createReply();
 			try {
+				//Get orders received from the client
 				orders = (ArrayList<Order>)(request.getContentObject());
-				clientID = request.getSender().getLocalName(); //****************
 				
-				//Get nearest pickup
-				Location pickup = supplier.allocatePickUp(orders);
-				System.out.print("PICKUUPPP: " + pickup);
-				
-				//send pickup location and orders array to distributor
-				sendingMessage = new Pair<>(orders, pickup);
+				clientID = request.getSender().getLocalName();
+
+				//Call a new behaviour to initiate a communication with the distributor
 				addBehaviour( new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST))); 
 				
 			} catch (UnreadableException e) {
@@ -67,7 +71,6 @@ public class SupplierAgent extends Agent {
 			result.setContent("Supplier: Request received! I'm gonna call the distributor!");
 			return result;
 		}
-
 	}
 	
 	class FIPARequestDistributorInit extends AchieveREInitiator {
@@ -77,10 +80,18 @@ public class SupplierAgent extends Agent {
 		}
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
+			//Get nearest pickup to the client's orders location
+			Location pickup = supplier.allocatePickUp(orders);
+			
+			//Create a pair with the pickup location and the orders array to send to distributor
+			Pair<ArrayList<Order>, Location> ordersLocation = new Pair<>(orders, pickup);
+			
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
-			msg.addReceiver(new AID("DistAgent", false));
+			AID distrID = HelperClass.getAIDbyType(supAgent, "Distributor");
+			msg.addReceiver(distrID);
+			
 			try {
-				msg.setContentObject((Serializable)sendingMessage);
+				msg.setContentObject((Serializable)ordersLocation);
 			} catch (IOException e) {
 				System.err.format("Cannot send %s orders to distributor", clientID);
 				e.printStackTrace();
