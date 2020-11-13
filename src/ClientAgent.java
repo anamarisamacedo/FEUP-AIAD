@@ -24,12 +24,15 @@ public class ClientAgent extends Agent {
 	ArrayList<Order> orders = null;
 	String clientID = null;
 	Agent clientAgent = this;
+	Location location = null;
 	
 	public void setup() {
 		clientID = this.getAID().getLocalName();
 		orders = makeOrder(2);
 		addBehaviour(new FIPARequestInitToSupplier(this, new ACLMessage(ACLMessage.REQUEST)));
+		Random r = new Random();
 
+		this.location = new Location(r.nextInt(1000), r.nextInt(1000));
 		HelperClass.registerAgent(this, "Client");
 	}
 	
@@ -86,26 +89,17 @@ public class ClientAgent extends Agent {
 		int maxWeight = 100;
 		int minWeight = 1;
 		int maxItems = 5;
-		int minLat = 0;
-		int maxLat = 1000;
-		int minLon = 0;
-		int maxLon = 1000;
 
-		//will be used to generate random nrs
-		Random r = new Random();
-
-		//list of all the orders generated
 		ArrayList<Order> orders = new ArrayList<Order>();
 
 		//Create nr of orders requested
 		for(int i = 0; i < totalOrders; i++)
 		{
 			Order newOrder = new Order();
-			int lat = r.nextInt((maxLat-minLat)+1)+minLat;
-			int longit = r.nextInt((maxLon-minLon)+1)+minLon;
-			newOrder.setLocation(new Location(lat, longit));
+			newOrder.setLocation(this.location);
 			newOrder.setClientID(this.getAID());
 
+			Random r = new Random();
 			//random nr of items for each order
 			int itemNr = r.nextInt(maxItems);
 
