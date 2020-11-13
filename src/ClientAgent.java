@@ -21,14 +21,14 @@ import java.util.Vector;
  * */
 public class ClientAgent extends Agent {
 
-	ArrayList<Order> orders = null;
+	Order order = null;
 	String clientID = null;
 	Agent clientAgent = this;
 	Location location = null;
 	
 	public void setup() {
 		clientID = this.getAID().getLocalName();
-		orders = makeOrder(2);
+		order = makeOrder();
 		addBehaviour(new FIPARequestInitToSupplier(this, new ACLMessage(ACLMessage.REQUEST)));
 		Random r = new Random();
 
@@ -43,7 +43,7 @@ public class ClientAgent extends Agent {
 		}
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
-			System.out.format("%s: I'm gonna ask the supplier for 10 orders. The first order has this location: %d, %d\n", clientID, orders.get(0).getLocation().getLon(), orders.get(0).getLocation().getLat());
+			System.out.format("%s: I'm gonna ask the supplier for %d items. The first order has this location: %d, %d\n", clientID, order.getItems().size(), order.getLocation().getLon(), order.getLocation().getLat());
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
 
 			AID supplierID = HelperClass.getAIDbyType(clientAgent, "Supplier");
@@ -54,7 +54,7 @@ public class ClientAgent extends Agent {
 			}
 			msg.addReceiver(supplierID);
 			try {
-				msg.setContentObject((Serializable)orders);
+				msg.setContentObject((Serializable)order);
 			} catch (IOException e) {
 				System.err.format("%s: Cannot make orders", clientID);
 				e.printStackTrace();
@@ -78,41 +78,29 @@ public class ClientAgent extends Agent {
 		protected void handleFailure(ACLMessage failure) {
 			System.out.println(failure);
 		}
-		
 
 	}
-	
-	private ArrayList<Order> makeOrder(int totalOrders)
+
+	private Order makeOrder()
 	{
-		//This should probably be sent by the ClientAgent in the request,
-		//and then passed here
-		int maxWeight = 100;
-		int minWeight = 1;
-		int maxItems = 5;
+		Order order = new Order();
+		order.setLocation(this.location);
+		order.setClientID(this.getAID());
 
-		ArrayList<Order> orders = new ArrayList<Order>();
+		Random r = new Random();
+		//random nr of items for each order
+		int probBuy = 20;
 
-		//Create nr of orders requested
-		for(int i = 0; i < totalOrders; i++)
+		ArrayList<Item> items = HelperClass.getItems("Products.txt");
+
+		for(Item item : items)
 		{
-			Order newOrder = new Order();
-			newOrder.setLocation(this.location);
-			newOrder.setClientID(this.getAID());
-
-			Random r = new Random();
-			//random nr of items for each order
-			int itemNr = r.nextInt(maxItems);
-
-			for(int j = 0; j < itemNr; j++)
+			if(r.nextInt(100) < probBuy)
 			{
-				int weight = r.nextInt((maxWeight-minWeight)+1)+minWeight;
-				String name = "Item" + Integer.toString(i);
-
-				newOrder.addItem(new Item(weight, name));
+				order.addItem(item);
 			}
-			orders.add(newOrder);
 		}
-		return orders;
+		return order;
 	}
 	
 	
