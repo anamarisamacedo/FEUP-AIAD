@@ -5,21 +5,24 @@ public class Item implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 2L;
-	// physical dimensions: w*h*l
-	private int[] dimensions;
 	private int weight;
 	private String name;
+	private int volume;
 
-	public Item(int[] dimensions, Integer weight, String name){
-		this.dimensions = dimensions;
+	public Item(Integer weight, String name){
 		this.weight = weight;
 		this.name = name;
 	}
+	public Item(Integer weight, String name, int volume){
+		this.weight = weight;
+		this.name = name;
+		this.volume = volume;
+	}
 
 	public Item() {
-		this.dimensions = new int[] { 1, 2, 3 };
 		this.weight = 0;
 		this.name = "No-name";
+		this.volume = 0;
 	}
 
 	public void setWeight(Integer weight) {
@@ -30,10 +33,6 @@ public class Item implements Serializable {
 		this.name = name;
 	}
 
-	public void setDimensions(int[] dimensions) {
-		this.dimensions = dimensions;
-	}
-
 	public int getWeight() {
 		return this.weight;
 	}
@@ -42,12 +41,18 @@ public class Item implements Serializable {
 		return this.name;
 	}
 
-	public int[] getDimensions() {
-		return this.dimensions;
+	public void setVolume(int volume)
+	{
+		this.volume = volume;
+	}
+
+	public int getVolume()
+	{
+		return this.volume;
 	}
 
 	public boolean equals(Item item) {
-		return this.dimensions.equals(item.getDimensions()) && this.weight == item.getWeight()
-				&& this.name == item.name;
+		return this.name.equals(item.getName()) && this.weight == item.getWeight()
+				&& this.volume == item.getVolume();
 	}
 }

@@ -45,4 +45,9 @@ public class HelperClass {
         }
         catch (FIPAException fe) { fe.printStackTrace(); }
     }
+
+    public static void getItems(String filename)
+    {
+
+    }
 }

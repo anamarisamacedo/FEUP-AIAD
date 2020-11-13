@@ -54,6 +54,16 @@ public class Order implements Serializable{
 		return totalWeight;
 	}
 
+	public int getVolume()
+	{
+		int totalVolume = 0;
+		for(Item item : items)
+		{
+			totalVolume += item.getVolume();
+		}
+		return totalVolume;
+	}
+
 	public PriorityType getPriority() {
 		return this.priority;
 	}

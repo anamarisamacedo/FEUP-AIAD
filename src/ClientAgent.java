@@ -27,7 +27,7 @@ public class ClientAgent extends Agent {
 	
 	public void setup() {
 		clientID = this.getAID().getLocalName();
-		orders = createRandomOrders(2);
+		orders = makeOrder(2);
 		addBehaviour(new FIPARequestInitToSupplier(this, new ACLMessage(ACLMessage.REQUEST)));
 
 		HelperClass.registerAgent(this, "Client");
@@ -79,18 +79,12 @@ public class ClientAgent extends Agent {
 
 	}
 	
-	private ArrayList<Order> createRandomOrders(int totalOrders)
+	private ArrayList<Order> makeOrder(int totalOrders)
 	{
 		//This should probably be sent by the ClientAgent in the request,
 		//and then passed here
 		int maxWeight = 100;
 		int minWeight = 1;
-		int minHeight = 20;
-		int maxHeight = 40;
-		int minWidth = 20;
-		int maxWidth = 40;
-		int minLength = 20;
-		int maxLength = 40;
 		int maxItems = 5;
 		int minLat = 0;
 		int maxLat = 1000;
@@ -118,12 +112,9 @@ public class ClientAgent extends Agent {
 			for(int j = 0; j < itemNr; j++)
 			{
 				int weight = r.nextInt((maxWeight-minWeight)+1)+minWeight;
-				int height = r.nextInt((maxHeight-minHeight)+1)+minHeight;
-				int width = r.nextInt((maxWidth-minWidth)+1)+minWidth;
-				int length = r.nextInt((maxLength-minLength)+1)+minLength;
 				String name = "Item" + Integer.toString(i);
 
-				newOrder.addItem(new Item(new int[] { width, height, length }, weight, name));
+				newOrder.addItem(new Item(weight, name));
 			}
 			orders.add(newOrder);
 		}
