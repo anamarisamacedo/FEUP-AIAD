@@ -43,6 +43,7 @@ public class ClientAgent extends Agent {
 		}
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
+			Order order = makeOrder();
 			System.out.format("%s: I'm gonna ask the supplier for %d items. The first order has this location: %d, %d\n", clientID, order.getItems().size(), order.getLocation().getLon(), order.getLocation().getLat());
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
 

@@ -28,7 +28,7 @@ import java.util.*;
 
 public class SupplierAgent extends Agent {
 
-	ArrayList<Order> orders = null; 
+	Order order = null;
 	SupplierAgent supAgent = this;
 	Supplier supplier = new Supplier();
 	String clientID = null;
@@ -50,7 +50,7 @@ public class SupplierAgent extends Agent {
 			ACLMessage reply = request.createReply();
 			try {
 				//Get orders received from the client
-				orders = (ArrayList<Order>)(request.getContentObject());
+				order = (Order)(request.getContentObject());
 				
 				clientID = request.getSender().getLocalName();
 
@@ -81,10 +81,10 @@ public class SupplierAgent extends Agent {
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
 			//Get nearest pickup to the client's orders location
-			Location pickup = supplier.allocatePickUp(orders);
+			Location pickup = supplier.allocatePickUp(order);
 			
 			//Create a pair with the pickup location and the orders array to send to distributor
-			Pair<ArrayList<Order>, Location> ordersLocation = new Pair<>(orders, pickup);
+			Pair<Order, Location> ordersLocation = new Pair<>(order, pickup);
 			
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
 			AID distrID = HelperClass.getAIDbyType(supAgent, "Distributor");

@@ -1,78 +1,117 @@
 Sony ZV1 Camera
 10
+5
 Canon DSLR Camera
 20
+5
 Canon EOS Rebel
 21
+4
 TV SAMSUNG UE43TU7005
 21
+10
 TV LG 43UN7100
 35
+11
 TV SAMSUNG UE43TU7125
 23
+14
 TV LG 55NANO866
 67
+13
 Smartphone SAMSUNG Galaxy S20 FE
 62
+5
 Smartphone SAMSUNG Galaxy A21s
 34
+4
 Smartphone SAMSUNG Galaxy A20e
 12
+4
 Smartphone SAMSUNG Galaxy A20s
 2
+3
 iPhone 11
 42
+3
 iPhone 11 Pro Max
 4
+5
 iPhone SE
 4
+5
 iPhone 7
 85
+6
 iPhone 8 Plus
 54
+5
 Smartphone HUAWEI P40 Lite
+3
 3
 Smartphone HUAWEI P40 Pro
 9
+3
 Smartphone HUAWEI Y5 P
 13
+4
 Smartphone HUAWEI P30 Lite
 43
+5
 APPLE Watch Series 3
 31
+3
 APPLE Watch Series 5
 31
+2
 APPLE Watch Series 6
 34
+2
 APPLE Watch SE
 74
+2
 APPLE Watch Nike S5
 1
+2
 Jogo PS5 NBA 2K21
 7
+1
 Jogo PS5 Godfall
 7
+1
 Jogo PS5 Fortnite
 8
+1
 Jogo PS5 Far Cry 6
 21
+1
 Jogo PS5 WRC 9
 32
+1
 Consola PS4 Slim
 25
+10
 Consola PS4 Pro
 32
+9
 Consola PS5
 7
+9
 Consola PS4 Pro 500M
 82
+8
 Nintendo Switch V2
 24
+7
 Nintendo Switch Lite
 46
+6
 Portátil Gaming ASUS ROG Zephyrus
 46
+10
 Portátil ACER Swift 1
 73
+10
 Portátil ASUS E410MAN4DHDAO1
-3
+10
+11
