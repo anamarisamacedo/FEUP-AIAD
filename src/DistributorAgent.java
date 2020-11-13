@@ -38,11 +38,11 @@ public class DistributorAgent extends Agent {
         protected ACLMessage handleRequest(ACLMessage request) {
             try {
             	//Get the content (pair with the orders array and the pickup location) of the received message
-                Pair<ArrayList<Order>, Location> requestMessage = (Pair<ArrayList<Order>, Location>)(request.getContentObject());
-                ArrayList<Order> orders = requestMessage.getFirst();
+                Pair<Order, Location> requestMessage = (Pair<Order, Location>)(request.getContentObject());
+                Order order = requestMessage.getFirst();
                 Location pickup = requestMessage.getSecond();
                 
-                System.out.println("Got the orders, here is the first's date: " + orders.get(0).getDate());
+                System.out.println("Got the orders, here is the first's date: " + order.getDate());
                 System.out.println("Got the location: " + requestMessage.getSecond().getLat() + ", " + requestMessage.getSecond().getLon());
                
 

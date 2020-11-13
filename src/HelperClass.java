@@ -52,6 +52,10 @@ public class HelperClass {
         catch (FIPAException fe) { fe.printStackTrace(); }
     }
 
+    public static void main(String[] args) {
+        ArrayList<Pair<Item, Integer>> items = getItemsAndStock("Products.txt");
+        System.out.println("It's done!");
+    }
     public static ArrayList<Item> getItems(String filename)
     {
         ArrayList<Item> items = new ArrayList<>();
