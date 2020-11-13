@@ -32,7 +32,7 @@ public class SupplierAgent extends Agent {
 	SupplierAgent supAgent = this;
 	Supplier supplier = new Supplier();
 	String clientID = null;
-	
+
 	public void setup() {
 		addBehaviour(new FIPARequestClientResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
 		System.out.println("Supplier active!!");
@@ -45,25 +45,38 @@ public class SupplierAgent extends Agent {
 		public FIPARequestClientResp(Agent a, MessageTemplate mt) {
 			super(a, mt);
 		}
-		
+
 		protected ACLMessage handleRequest(ACLMessage request) {
 			ACLMessage reply = request.createReply();
 			try {
-				//Get order received from the client
-				order = (Order)(request.getContentObject());
+				// Get order received from the client
+				order = (Order) (request.getContentObject());
 				clientID = request.getSender().getLocalName();
 
-				//Call a new behaviour to initiate a communication with the distributor
-				addBehaviour( new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST))); 
-				
+				ArrayList<Pair<Item, Integer>> itemsStock = HelperClass.getItemsAndStock("Products.txt");
+
+				for (Pair<Item, Integer> stockItem : itemsStock) {
+					for (Item clientItem : order.getItems()) {
+						if(stockItem.getFirst().equals(clientItem)) {
+							if(stockItem.getSecond()==0) {
+								reply.setPerformative(ACLMessage.REFUSE);
+								reply.setContent("We do not have stock for " + clientItem.getName());
+								return reply;
+							}
+						}
+					}
+				}
+				// Call a new behaviour to initiate a communication with the distributor
+				addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
+
 			} catch (UnreadableException e) {
 				e.printStackTrace();
-			} 	
-			
+			}
+
 			reply.setPerformative(ACLMessage.AGREE);
 			return reply;
 		}
-		
+
 		protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) {
 			ACLMessage result = request.createReply();
 			result.setPerformative(ACLMessage.INFORM);
@@ -71,7 +84,7 @@ public class SupplierAgent extends Agent {
 			return result;
 		}
 	}
-	
+
 	class FIPARequestDistributorInit extends AchieveREInitiator {
 
 		public FIPARequestDistributorInit(Agent a, ACLMessage msg) {
@@ -79,22 +92,22 @@ public class SupplierAgent extends Agent {
 		}
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
-			//Get nearest pickup to the client's orders location
+			// Get nearest pickup to the client's orders location
 			Location pickup = supplier.allocatePickUp(order);
-			//Create a pair with the pickup location and the orders array to send to distributor
+			// Create a pair with the pickup location and the orders array to send to
+			// distributor
 			Pair<Order, Location> orderLocation = new Pair<>(order, pickup);
-			
+
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
 			AID distrID = HelperClass.getAIDbyType(supAgent, "Distributor");
-			if(distrID == null)
-			{
+			if (distrID == null) {
 				System.out.println("No ditributor found, aborting");
 				return v;
 			}
-			
+
 			msg.addReceiver(distrID);
 			try {
-				msg.setContentObject((Serializable)orderLocation);
+				msg.setContentObject((Serializable) orderLocation);
 			} catch (IOException e) {
 				System.err.format("Cannot send %s order to distributor", clientID);
 				e.printStackTrace();
@@ -102,24 +115,23 @@ public class SupplierAgent extends Agent {
 			v.add(msg);
 			return v;
 		}
-		
+
 		protected void handleAgree(ACLMessage agree) {
 			System.out.println(agree);
 		}
-		
+
 		protected void handleRefuse(ACLMessage refuse) {
 			System.out.println(refuse);
-			}
-		
+		}
+
 		protected void handleInform(ACLMessage inform) {
 			System.out.println(inform);
-			}
-		
+		}
+
 		protected void handleFailure(ACLMessage failure) {
 			System.out.println(failure);
 		}
 
 	}
-	
 
 }

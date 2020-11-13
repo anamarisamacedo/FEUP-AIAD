@@ -1,14 +1,14 @@
 Sony ZV1 Camera
-10
+0
 5
 Canon DSLR Camera
-20
+0
 5
 Canon EOS Rebel
-21
+0
 4
 TV SAMSUNG UE43TU7005
-21
+0
 10
 TV LG 43UN7100
 35
