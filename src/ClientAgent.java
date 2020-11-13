@@ -22,7 +22,7 @@ public class ClientAgent extends Agent {
 	
 	public void setup() {
 		clientID = this.getAID().getLocalName();
-		orders = createRandomOrders(10);
+		orders = createRandomOrders(2);
 		addBehaviour(new FIPARequestInitToSupplier(this, new ACLMessage(ACLMessage.REQUEST)));
 	}
 	
