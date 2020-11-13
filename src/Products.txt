@@ -12,7 +12,7 @@ TV SAMSUNG UE43TU7125
 23
 TV LG 55NANO866
 67
-Smartphone SAMSUNG Galaxy S20 FE
+Smartphone SAMSUNG Galaxy S20
 62
 Smartphone SAMSUNG Galaxy A21s
 34
@@ -70,9 +70,9 @@ Nintendo Switch V2
 24
 Nintendo Switch Lite
 46
-Portátil Gaming ASUS ROG Zephyrus
+Portatil Gaming ASUS ROG Zephyrus
 46
-Portátil ACER Swift 1
+Portatil ACER Swift 1
 73
-Portátil ASUS E410MAN4DHDAO1
+Portatil ASUS E410MAN4DHDAO1
 3
