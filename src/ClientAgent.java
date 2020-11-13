@@ -2,15 +2,17 @@
 import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.AchieveREInitiator;
+import jade.proto.AchieveREResponder;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Vector;
-
 /*
  * Simulate a costumer (created by ClientFactory Agent)
  * and make a purchase (request to the supplier)
@@ -24,6 +26,7 @@ public class ClientAgent extends Agent {
 		clientID = this.getAID().getLocalName();
 		orders = createRandomOrders(10);
 		addBehaviour(new FIPARequestInitToSupplier(this, new ACLMessage(ACLMessage.REQUEST)));
+		addBehaviour(new FIPAClientResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
 	}
 	
 	class FIPARequestInitToSupplier extends AchieveREInitiator {
@@ -63,6 +66,29 @@ public class ClientAgent extends Agent {
 			System.out.println(failure);
 		}
 		
+
+	}
+	
+	//receives request from distributor
+	class FIPAClientResp extends AchieveREResponder {
+
+		public FIPAClientResp(Agent a, MessageTemplate mt) {
+			super(a, mt);
+		}
+		
+		protected ACLMessage handleRequest(ACLMessage request) {
+			System.out.println(request);	
+			ACLMessage reply = request.createReply();
+			reply.setPerformative(ACLMessage.AGREE);
+			return reply;
+		}
+		
+		protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) {
+			ACLMessage result = request.createReply();
+			result.setPerformative(ACLMessage.INFORM);
+			result.setContent("Client: Order received! Thanks for the expedience!");
+			return result;
+		}
 
 	}
 	
