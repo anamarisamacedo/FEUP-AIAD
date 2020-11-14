@@ -1,3 +1,0 @@
-Vehicle 13 delivered to (Lat: 47 Loc: 659) in 1 place and took 54561,000000 time;
-Vehicle 13 delivered to (Lat: 185 Loc: 799) in 2 place and took 59391,000000 time;
-Vehicle 13 delivered to (Lat: 927 Loc: 269) in 3 place and took 163324,000000 time;

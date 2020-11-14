@@ -1,9 +1,0 @@
-Vehicle 21 delivered to (Lat: 247 Loc: 321) in 1 place and took 3281,000000 time;
-Vehicle 21 delivered to (Lat: 485 Loc: 313) in 2 place and took 4415,000000 time;
-Vehicle 21 delivered to (Lat: 542 Loc: 497) in 3 place and took 5157,000000 time;
-Vehicle 21 delivered to (Lat: 547 Loc: 668) in 4 place and took 5742,000000 time;
-Vehicle 21 delivered to (Lat: 641 Loc: 939) in 5 place and took 7388,000000 time;
-Vehicle 21 delivered to (Lat: 211 Loc: 867) in 6 place and took 11189,000000 time;
-Vehicle 21 delivered to (Lat: 233 Loc: 780) in 7 place and took 11350,000000 time;
-Vehicle 21 delivered to (Lat: 840 Loc: 397) in 8 place and took 21653,000000 time;
-Vehicle 21 delivered to (Lat: 658 Loc: 7) in 9 place and took 25358,000000 time;

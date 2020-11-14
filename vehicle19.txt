@@ -1,1 +1,0 @@
-Vehicle 19 delivered to (Lat: 888 Loc: 597) in 1 place and took 143119,000000 time;
