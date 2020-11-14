@@ -34,6 +34,7 @@ public class SupplierAgent extends Agent {
 	String clientID = null;
 
 	public void setup() {
+		//Add behaviour to receive requests from clients
 		addBehaviour(new FIPARequestClientResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
 		System.out.println("Supplier active!!");
 
@@ -48,17 +49,21 @@ public class SupplierAgent extends Agent {
 
 		protected ACLMessage handleRequest(ACLMessage request) {
 			ACLMessage reply = request.createReply();
+			
 			try {
-				// Get order received from the client
+				// Get the order received from the client
 				order = (Order) (request.getContentObject());
+				//Get client ID
 				clientID = request.getSender().getLocalName();
-
+				
+				//Check if the ordered items have stock 
 				ArrayList<Pair<Item, Integer>> itemsStock = HelperClass.getItemsAndStock("Products.txt");
-
 				for (Pair<Item, Integer> stockItem : itemsStock) {
 					for (Item clientItem : order.getItems()) {
 						if(stockItem.getFirst().equals(clientItem)) {
 							if(stockItem.getSecond()==0) {
+								//If an item doesn't have stock, a REFUSE message is sent to the client
+								//and the process finishes 
 								reply.setPerformative(ACLMessage.REFUSE);
 								reply.setContent("We do not have stock for " + clientItem.getName());
 								return reply;
@@ -66,7 +71,8 @@ public class SupplierAgent extends Agent {
 						}
 					}
 				}
-				// Call a new behaviour to initiate a communication with the distributor
+				
+				// If all items have stock, a new behaviour is created to initiate a communication with the distributor
 				addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
 
 			} catch (UnreadableException e) {
@@ -94,8 +100,7 @@ public class SupplierAgent extends Agent {
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
 			// Get nearest pickup to the client's orders location
 			Location pickup = supplier.allocatePickUp(order);
-			// Create a pair with the pickup location and the orders array to send to
-			// distributor
+			// Create a pair with the pickup location and the orders array to send to distributor
 			Pair<Order, Location> orderLocation = new Pair<>(order, pickup);
 
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
