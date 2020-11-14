@@ -1,0 +1,4 @@
+Vehicle 2 delivered to (Lat: 79 Loc: 527) in 1 place and took 4732,000000 time;
+Vehicle 2 delivered to (Lat: 590 Loc: 118) in 2 place and took 11872,000000 time;
+Vehicle 2 delivered to (Lat: 652 Loc: 36) in 3 place and took 12049,000000 time;
+Vehicle 2 delivered to (Lat: 754 Loc: 101) in 4 place and took 12292,000000 time;

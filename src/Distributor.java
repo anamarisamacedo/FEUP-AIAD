@@ -34,32 +34,44 @@ class Distributor
 		//TODO: vv temporary!!
 		Location source = new Location(0, 0);
 		
+		
 		int size = this.orders.size();
 		while(size > 0) {
 			vehicle = this.generateVehicle();
 			int occupancy = 0;
 			
-			while(occupancy <= vehicle.getCapacity()) {
+			System.out.println("hello1.1");
+			while(occupancy <= vehicle.getCapacity() && size > 0) {
 				ListIterator<Order> iter = this.orders.listIterator();
+				System.out.println("hello1.2");
+				System.out.println(size);
+				System.out.println(occupancy);
+				System.out.println(vehicle.getCapacity());
 				while(iter.hasNext()){
 					Order currOrder = iter.next();
+					System.out.println(currOrder.getWeight());
 	    			if(occupancy + currOrder.getWeight() <= vehicle.getCapacity()){
+	    				System.out.println("hello1.3");
 	    				vehicle.addOrder(currOrder);
 	    				occupancy += currOrder.getWeight();
 	        			iter.remove();
 	        			size--;
 	    			}
+	    			else continue;
 				}
+				break;
 			}
 			
 			if(vehicle.getOrders().size() > 0)
 				fleet.add(vehicle);
 		}
 		
+		System.out.println("hello5");
 		for(int i = 0; i < fleet.size(); i++) {
 			time_per_order.addAll(this.path(fleet.get(i), source));
 		}
 		
+		System.out.println("hello6");
 		return time_per_order;
 	}
 	
@@ -115,19 +127,27 @@ class Distributor
 		     e.printStackTrace();
 		  }
     	
+		System.out.println("hello2.1");
     	while(!finalized(visited)) {
-    		int i = 0;
+    		int i = 0, min = 0;
     		double distTo = Integer.MAX_VALUE;
     		Location temp = null;
+    		System.out.println("hello2.2");
     		for(; i < locations.size(); i++) {
+    			System.out.println(i);
         		if(currLoc.distanceTo(locations.get(i)) < distTo && visited[i] == false && !currLoc.equals(locations.get(i))) {
         			distTo = currLoc.distanceTo(locations.get(i));
         			temp = locations.get(i);
+        			min = i;
         		}
         	}
     		
+    		System.out.println("hello2.3");
+    		System.out.println(visited.length);
+    		System.out.println(locations.size());
+    		System.out.println(i);
     		if(temp != null) {
-				visited[i] = true;
+				visited[min] = true;
 				dist += distTo;
 				currLoc = temp;
 				double time = dist / v.baseSpeed();
@@ -136,7 +156,8 @@ class Distributor
 						String.format("Vehicle %s delivered to (Lat: %d Loc: %d) in %d place and took %f time;", v.getId(), currLoc.getLat(), currLoc.getLon(), count, time);
 				pw.println(print);
 				
-				time_per_order.add(new Pair<Order, Double>(v.getOrders().get(i), time));
+				System.out.println("hello2.4");
+				time_per_order.add(new Pair<Order, Double>(v.getOrders().get(min), time));
     		}
     	}
     	

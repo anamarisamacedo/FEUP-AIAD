@@ -1,0 +1,2 @@
+Vehicle 0 delivered to (Lat: 460 Loc: 19) in 1 place and took 26495,000000 time;
+Vehicle 0 delivered to (Lat: 539 Loc: 178) in 2 place and took 30435,000000 time;
