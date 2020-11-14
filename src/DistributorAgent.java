@@ -34,10 +34,10 @@ public class DistributorAgent extends Agent {
         protected ACLMessage handleRequest(ACLMessage request) {
             try {
                 List<Order> orders = (ArrayList<Order>)(request.getContentObject());
-                Distributor dist = new Distributor(orders);
-                time_per_order = dist.allocate();
                 Arrays.toString(orders.toArray());
                 System.out.println("Got the orders, here is the first's date: " + orders.get(0).getDate());
+                Distributor dist = new Distributor(orders);
+                time_per_order = dist.allocate();
                 //send order array
                 //addBehaviour( new FIPARequestSupplierInit(this, new ACLMessage(ACLMessage.REQUEST), orders ));
                 addBehaviour( new FIPARequestClientInit(distAgent, new ACLMessage(ACLMessage.REQUEST)));
