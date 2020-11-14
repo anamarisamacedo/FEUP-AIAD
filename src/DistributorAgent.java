@@ -21,6 +21,7 @@ public class DistributorAgent extends Agent {
 
     public void setup() {
         addBehaviour(new FIPARequestResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
+        System.out.println("Distributor active!!");
     }
 
     //Receives requests from the supplier

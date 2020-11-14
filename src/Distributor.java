@@ -42,9 +42,10 @@ class Distributor
 			while(occupancy <= vehicle.getCapacity()) {
 				ListIterator<Order> iter = this.orders.listIterator();
 				while(iter.hasNext()){
-	    			if(occupancy + iter.next().getWeight() <= vehicle.getCapacity()){
-	    				vehicle.addOrder(iter.next());
-	    				occupancy += iter.next().getWeight();
+					Order currOrder = iter.next();
+	    			if(occupancy + currOrder.getWeight() <= vehicle.getCapacity()){
+	    				vehicle.addOrder(currOrder);
+	    				occupancy += currOrder.getWeight();
 	        			iter.remove();
 	        			size--;
 	    			}
