@@ -5,3 +5,5 @@ bin/src/
 APDescription.txt
 MTPs-Main-Container.txt
 *.class
+*.txt
+.txt
