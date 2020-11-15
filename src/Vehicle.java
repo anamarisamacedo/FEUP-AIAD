@@ -4,6 +4,7 @@ import java.util.List;
 abstract class Vehicle {
 	private static int native_id = 0;
 	
+	//Type (Mailman, Motorcycle or Truck)
 	protected String type;
     //total capacity
     protected int capacity;

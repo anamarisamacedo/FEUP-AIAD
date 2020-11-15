@@ -42,7 +42,7 @@ public class SupplierAgent extends Agent {
 
 	public void setup() {
 		supAgent = this;
-		// Add behaviour to receive requests from clients
+		// Add behaviour to receive requests/orders from clients
 		addBehaviour(new FIPARequestClientResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
 		System.out.println("Supplier active!!");
 
@@ -60,24 +60,29 @@ public class SupplierAgent extends Agent {
 			
 
 			try {
-				// Get the orders received from the client
+				// Get the order received from the client
 				Order order = (Order) (request.getContentObject());
+				//Start counting the day from the first received order
 				if(orderCount==0) {
 					dayStart = LocalDateTime.now();
 				}
 				orderCount++;
+				
+				LocalDateTime dayEnd = LocalDateTime.now();
+				Long duration = Duration.between(dayStart, dayEnd).getSeconds();
+				
 				ArrayList<Pair<Item, Integer>> itemsStock = HelperClass.getItemsAndStock("Products.txt");
 				// Check if the ordered items have stock
 				for (Item clientItem : order.getItems()) {
 					for (Pair<Item, Integer> stockItem : itemsStock) {
 						if (clientItem.equals(stockItem.getFirst())) {
-							if(stockItem.getSecond()==0) {								
-								LocalDateTime dayEnd = LocalDateTime.now();
-								Long duration = Duration.between(dayStart, dayEnd).getSeconds();
+							if(stockItem.getSecond()==0) {	
+								// At the end of a day (10 second) the supplier calls the distributor to send the orders
 								if(duration >= 10) {
 									orderCount = 0;
 									finalOrders = orders;
 									orders = new ArrayList<Order>();
+									//a new behaviour is created to initiate a communication with the distributor
 									addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
 								}
 								//If an item doesn't have stock, a REFUSE message is sent to the client
@@ -91,9 +96,6 @@ public class SupplierAgent extends Agent {
 				}
 				
 				orders.add(order);
-
-				LocalDateTime dayEnd = LocalDateTime.now();
-				Long duration = Duration.between(dayStart, dayEnd).getSeconds();
 				
 				// At the end of a day (10 second) the supplier calls the distributor to send the orders
 				if(duration >= 10) {	
@@ -127,7 +129,7 @@ public class SupplierAgent extends Agent {
 		}
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
-			// Get nearest pickup to the client's orders location
+			// Get nearest pickup to the clients' orders locations at the end of the day
 			Location pickup = supplier.allocatePickUp(finalOrders);
 
 			// Create a pair with the pickup location and the orders array to send to
