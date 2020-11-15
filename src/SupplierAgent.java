@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,9 +31,13 @@ import java.util.*;
 
 public class SupplierAgent extends Agent {
 
+	
+	public int orderCount = 0;
+	public int clientCount = 10;
 	public ArrayList<Order> orders = new ArrayList<Order>();
 	private SupplierAgent supAgent;
 	private Supplier supplier = new Supplier();
+	public LocalDateTime dayStart;
 
 	public void setup() {
 		supAgent = this;
@@ -49,30 +56,54 @@ public class SupplierAgent extends Agent {
 
 		protected ACLMessage handleRequest(ACLMessage request) {
 			ACLMessage reply = request.createReply();
+			
 
 			try {
 				// Get the orders received from the client
-				ArrayList<Order> orders = (ArrayList<Order>) (request.getContentObject());
-
+				Order order = (Order) (request.getContentObject());
+				if(orderCount==0) {
+					dayStart = LocalDateTime.now();
+				}
+				orderCount++;
 				ArrayList<Pair<Item, Integer>> itemsStock = HelperClass.getItemsAndStock("Products.txt");
 				// Check if the ordered items have stock
-				for (Order order : orders) {
-					for (Item clientItem : order.getItems()) {
-						for (Pair<Item, Integer> stockItem : itemsStock) {
-							if (clientItem.equals(stockItem.getFirst())) {
-								if (stockItem.getSecond() == 0) {
-									orders.remove(order);
-									//System.out.format("Item %s doen's have stock. Order %s was not sent", clientItem.getName(), order.ID);
-								} else {
-									stockItem.setSecond(stockItem.getSecond()-1);
-								}	
+				for (Item clientItem : order.getItems()) {
+					for (Pair<Item, Integer> stockItem : itemsStock) {
+						if (clientItem.equals(stockItem.getFirst())) {
+							if(stockItem.getSecond()==0) {
+								//If an item doesn't have stock, a REFUSE message is sent to the client
+								//and the process finishes 
+								//if(clientCount == 10) {
+								//	addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
+								//}
+								LocalDateTime dayEnd = LocalDateTime.now();
+								Long duration = Duration.between(dayStart, dayEnd).getSeconds();
+								System.out.print("Duration"+duration);
+								if(duration >= 10) {
+									orderCount = 0;
+									addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
+								}
+								reply.setPerformative(ACLMessage.REFUSE);
+								reply.setContent("We do not have stock for " + clientItem.getName());
+								return reply;
 							}
 						}
 					}
 				}
+				
+				orders.add(order);
+				System.out.print("OrderCount: " + orderCount);
+
 				// If all items have stock, a new behaviour is created to initiate a
 				// communication with the distributor
-				addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
+				//if (orderCount >= clientCount) {
+				LocalDateTime dayEnd = LocalDateTime.now();
+				Long duration = Duration.between(dayStart, dayEnd).getSeconds();
+				System.out.print("Duration"+duration);
+				if(duration >= 10) {	
+					orderCount = 0;
+					addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
+				}
 
 			} catch (UnreadableException e) {
 				e.printStackTrace();

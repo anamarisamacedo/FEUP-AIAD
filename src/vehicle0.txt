@@ -1,0 +1,1 @@
+Vehicle 0 delivered from (Lat: 615 Lon: 846) to (Lat: 647 Lon: 597) in 1 place and took 7878,000000 time;
