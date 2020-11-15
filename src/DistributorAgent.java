@@ -38,8 +38,6 @@ public class DistributorAgent extends Agent {
                 System.out.println("Got the orders, here is the first's date: " + orders.get(0).getDate());
                 Distributor dist = new Distributor(orders);
                 time_per_order = dist.allocate();
-                //send order array
-                //addBehaviour( new FIPARequestSupplierInit(this, new ACLMessage(ACLMessage.REQUEST), orders ));
                 addBehaviour( new FIPARequestClientInit(distAgent, new ACLMessage(ACLMessage.REQUEST)));
 
             } catch (UnreadableException e) {
@@ -69,14 +67,17 @@ public class DistributorAgent extends Agent {
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
 			
+			System.out.println(DistributorAgent.this.time_per_order.size());
 			for(int i = 0; i < DistributorAgent.this.time_per_order.size(); i++) {
+				ACLMessage reply = new ACLMessage(ACLMessage.REQUEST);
 				AID clientId = time_per_order.get(i).getFirst().getClientID();
-				msg.addReceiver(clientId);
+				reply.addReceiver(clientId);
+				System.out.println(clientId);
 				
 				double time = time_per_order.get(i).getSecond();
 				String date = time_per_order.get(i).getFirst().getDate();
-				msg.setContent(String.format("%s , your order was successfully delivered in %f and was ordered at %s", clientId, time, date));
-				v.add(msg);
+				reply.setContent(String.format("%s , your order was successfully delivered in %f and was ordered at %s", clientId, time, date));
+				v.add(reply);
 			}
 			
 			return v;

@@ -51,19 +51,19 @@ public class ClientAgent extends Agent {
 		}
 		
 		protected void handleAgree(ACLMessage agree) {
-			System.out.println(clientID + ": " + agree);		
+			//System.out.println(clientID + ": " + agree);		
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
-			System.out.println(refuse);
+			//System.out.println(refuse);
 			}
 		
 		protected void handleInform(ACLMessage inform) {
-			System.out.println(inform);
+			//System.out.println(inform);
 			}
 		
 		protected void handleFailure(ACLMessage failure) {
-			System.out.println(failure);
+			//System.out.println(failure);
 		}
 		
 
