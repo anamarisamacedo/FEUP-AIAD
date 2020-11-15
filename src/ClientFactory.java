@@ -7,7 +7,7 @@ import jade.wrapper.StaleProxyException;
 import java.util.concurrent.TimeUnit;
 
 public class ClientFactory extends Agent {
-    private int totalClients = 10;
+    private int totalClients = 15;
     public void setup()
     {
         HelperClass.registerAgent(this, "ClientFactory");
@@ -15,7 +15,7 @@ public class ClientFactory extends Agent {
         for(int i = 0; i < totalClients; i++)
         {
             try {
-                TimeUnit.SECONDS.sleep(2);
+                TimeUnit.SECONDS.sleep(3);
                 getContainerController().createNewAgent("Client-" + Integer.toString(i), "ClientAgent", null).start();
             }
             catch(StaleProxyException | InterruptedException e) {e.printStackTrace();}

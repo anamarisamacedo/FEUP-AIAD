@@ -4,6 +4,7 @@ import java.util.List;
 abstract class Vehicle {
 	private static int native_id = 0;
 	
+	protected String type;
     //total capacity
     protected int capacity;
     // vehicle speed when empty
@@ -24,6 +25,10 @@ abstract class Vehicle {
 
     public List<Order> getOrders() {
         return this.orders;
+    }
+    
+    public String getType() {
+        return this.type;
     }
 
 	public int getId() {

@@ -83,13 +83,14 @@ public class DistributorAgent extends Agent {
     			Vector<ACLMessage> v = new Vector<ACLMessage>();
     			
     			for(int i = 0; i < time_per_order.size(); i++) {
+    				ACLMessage reply = new ACLMessage(ACLMessage.REQUEST);
     				AID clientId = time_per_order.get(i).getFirst().getClientID();
-    				msg.addReceiver(clientId);
+    				reply.addReceiver(clientId);
     				
     				double time = time_per_order.get(i).getSecond();
     				String date = time_per_order.get(i).getFirst().getDate();
-    				msg.setContent(String.format("%s , your order was successfully delivered in %f and was ordered at %s", clientId, time, date));
-    				v.add(msg);
+    				reply.setContent(String.format("%s , your order was successfully delivered in %f and was ordered at %s", clientId, time, date));
+    				v.add(reply);
     			}
     			
     			return v;

@@ -1,9 +1,0 @@
-Vehicle 1 delivered from (Lat: 615 Lon: 846) to (Lat: 865 Lon: 833) in 1 place and took 1253,000000 time;
-Vehicle 1 delivered from (Lat: 615 Lon: 846) to (Lat: 949 Lon: 810) in 2 place and took 1405,000000 time;
-Vehicle 1 delivered from (Lat: 615 Lon: 846) to (Lat: 955 Lon: 337) in 3 place and took 5880,000000 time;
-Vehicle 1 delivered from (Lat: 615 Lon: 846) to (Lat: 964 Lon: 157) in 4 place and took 6530,000000 time;
-Vehicle 1 delivered from (Lat: 615 Lon: 846) to (Lat: 880 Lon: 12) in 5 place and took 7091,000000 time;
-Vehicle 1 delivered from (Lat: 615 Lon: 846) to (Lat: 467 Lon: 52) in 6 place and took 10535,000000 time;
-Vehicle 1 delivered from (Lat: 615 Lon: 846) to (Lat: 399 Lon: 155) in 7 place and took 10839,000000 time;
-Vehicle 1 delivered from (Lat: 615 Lon: 846) to (Lat: 210 Lon: 813) in 8 place and took 20213,000000 time;
-Vehicle 1 delivered from (Lat: 615 Lon: 846) to (Lat: 121 Lon: 917) in 9 place and took 20588,000000 time;

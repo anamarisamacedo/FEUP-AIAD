@@ -130,8 +130,8 @@ class Distributor {
 				double time = dist / v.baseSpeed();
 				count++;
 				String print = String.format(
-						"Vehicle %s delivered from (Lat: %d Lon: %d) to (Lat: %d Lon: %d) in %d place and took %f time;",
-						v.getId(), source.getLat(), source.getLon(), currLoc.getLat(), currLoc.getLon(), count, time);
+						"Vehicle %s (%s,capacity: %d) delivered from (Lat: %d Lon: %d) to (Lat: %d Lon: %d) in %d place and took %f time;",
+						v.getId(), v.getType(), v.capacity, source.getLat(), source.getLon(), currLoc.getLat(), currLoc.getLon(), count, time);
 				pw.println(print);
 				time_per_order.add(new Pair<Order, Double>(v.getOrders().get(min), time));
 			}

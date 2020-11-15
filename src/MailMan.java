@@ -3,5 +3,6 @@ public class MailMan extends Vehicle {
         super();
         this.capacity = 30;
         this.baseSpeed = 8;
+        this.type = "MailMan";
     }
 }

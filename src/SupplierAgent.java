@@ -35,6 +35,7 @@ public class SupplierAgent extends Agent {
 	public int orderCount = 0;
 	public int clientCount = 10;
 	public ArrayList<Order> orders = new ArrayList<Order>();
+	public ArrayList<Order> finalOrders = new ArrayList<Order>();
 	private SupplierAgent supAgent;
 	private Supplier supplier = new Supplier();
 	public LocalDateTime dayStart;
@@ -70,19 +71,17 @@ public class SupplierAgent extends Agent {
 				for (Item clientItem : order.getItems()) {
 					for (Pair<Item, Integer> stockItem : itemsStock) {
 						if (clientItem.equals(stockItem.getFirst())) {
-							if(stockItem.getSecond()==0) {
-								//If an item doesn't have stock, a REFUSE message is sent to the client
-								//and the process finishes 
-								//if(clientCount == 10) {
-								//	addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
-								//}
+							if(stockItem.getSecond()==0) {								
 								LocalDateTime dayEnd = LocalDateTime.now();
 								Long duration = Duration.between(dayStart, dayEnd).getSeconds();
-								System.out.print("Duration"+duration);
 								if(duration >= 10) {
 									orderCount = 0;
+									finalOrders = orders;
+									orders = new ArrayList<Order>();
 									addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
 								}
+								//If an item doesn't have stock, a REFUSE message is sent to the client
+								//and the process finishes 
 								reply.setPerformative(ACLMessage.REFUSE);
 								reply.setContent("We do not have stock for " + clientItem.getName());
 								return reply;
@@ -92,16 +91,16 @@ public class SupplierAgent extends Agent {
 				}
 				
 				orders.add(order);
-				System.out.print("OrderCount: " + orderCount);
 
-				// If all items have stock, a new behaviour is created to initiate a
-				// communication with the distributor
-				//if (orderCount >= clientCount) {
 				LocalDateTime dayEnd = LocalDateTime.now();
 				Long duration = Duration.between(dayStart, dayEnd).getSeconds();
-				System.out.print("Duration"+duration);
+				
+				// At the end of a day (10 second) the supplier calls the distributor to send the orders
 				if(duration >= 10) {	
 					orderCount = 0;
+					finalOrders = orders;
+					orders = new ArrayList<Order>();
+					//a new behaviour is created to initiate a communication with the distributor
 					addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
 				}
 
@@ -129,11 +128,11 @@ public class SupplierAgent extends Agent {
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
 			// Get nearest pickup to the client's orders location
-			Location pickup = supplier.allocatePickUp(orders);
+			Location pickup = supplier.allocatePickUp(finalOrders);
 
 			// Create a pair with the pickup location and the orders array to send to
 			// distributor
-			Pair<ArrayList<Order>, Location> ordersLocation = new Pair<>(orders, pickup);
+			Pair<ArrayList<Order>, Location> ordersLocation = new Pair<>(finalOrders, pickup);
 
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
 			AID distrID = HelperClass.getAIDbyType(supAgent, "Distributor");

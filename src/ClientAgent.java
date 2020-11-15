@@ -47,8 +47,8 @@ public class ClientAgent extends Agent {
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
 			Order order = makeOrder();
-			System.out.format("%s: I'm gonna ask the supplier for %d items. My location is: %d, %d\n", clientID,
-					order.getItems().size(), order.getLocation().getLat(), order.getLocation().getLon());
+			System.out.format("%s: I'm gonna ask the supplier for %d items. My location is: %d, %d. Order capacity: %d\n", clientID,
+					order.getItems().size(), order.getLocation().getLat(), order.getLocation().getLon(), order.getWeight());
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
 
 			AID supplierID = HelperClass.getAIDbyType(clientAgent, "Supplier");
