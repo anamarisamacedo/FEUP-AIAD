@@ -28,13 +28,13 @@ import java.util.*;
 
 public class SupplierAgent extends Agent {
 
-	Order order = null;
-	SupplierAgent supAgent = this;
-	Supplier supplier = new Supplier();
-	String clientID = null;
+	public ArrayList<Order> orders = new ArrayList<Order>();
+	private SupplierAgent supAgent;
+	private Supplier supplier = new Supplier();
 
 	public void setup() {
-		//Add behaviour to receive requests from clients
+		supAgent = this;
+		// Add behaviour to receive requests from clients
 		addBehaviour(new FIPARequestClientResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
 		System.out.println("Supplier active!!");
 
@@ -49,30 +49,29 @@ public class SupplierAgent extends Agent {
 
 		protected ACLMessage handleRequest(ACLMessage request) {
 			ACLMessage reply = request.createReply();
-			
+
 			try {
-				// Get the order received from the client
-				order = (Order) (request.getContentObject());
-				//Get client ID
-				clientID = request.getSender().getLocalName();
-				
-				//Check if the ordered items have stock 
+				// Get the orders received from the client
+				ArrayList<Order> orders = (ArrayList<Order>) (request.getContentObject());
+
 				ArrayList<Pair<Item, Integer>> itemsStock = HelperClass.getItemsAndStock("Products.txt");
-				for (Pair<Item, Integer> stockItem : itemsStock) {
+				// Check if the ordered items have stock
+				for (Order order : orders) {
 					for (Item clientItem : order.getItems()) {
-						if(stockItem.getFirst().equals(clientItem)) {
-							if(stockItem.getSecond()==0) {
-								//If an item doesn't have stock, a REFUSE message is sent to the client
-								//and the process finishes 
-								reply.setPerformative(ACLMessage.REFUSE);
-								reply.setContent("We do not have stock for " + clientItem.getName());
-								return reply;
+						for (Pair<Item, Integer> stockItem : itemsStock) {
+							if (clientItem.equals(stockItem.getFirst())) {
+								if (stockItem.getSecond() == 0) {
+									orders.remove(order);
+									//System.out.format("Item %s doen's have stock. Order %s was not sent", clientItem.getName(), order.ID);
+								} else {
+									stockItem.setSecond(stockItem.getSecond()-1);
+								}	
 							}
 						}
 					}
 				}
-				
-				// If all items have stock, a new behaviour is created to initiate a communication with the distributor
+				// If all items have stock, a new behaviour is created to initiate a
+				// communication with the distributor
 				addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
 
 			} catch (UnreadableException e) {
@@ -99,9 +98,11 @@ public class SupplierAgent extends Agent {
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
 			// Get nearest pickup to the client's orders location
-			Location pickup = supplier.allocatePickUp(order);
-			// Create a pair with the pickup location and the orders array to send to distributor
-			Pair<Order, Location> orderLocation = new Pair<>(order, pickup);
+			Location pickup = supplier.allocatePickUp(orders);
+
+			// Create a pair with the pickup location and the orders array to send to
+			// distributor
+			Pair<ArrayList<Order>, Location> ordersLocation = new Pair<>(orders, pickup);
 
 			Vector<ACLMessage> v = new Vector<ACLMessage>();
 			AID distrID = HelperClass.getAIDbyType(supAgent, "Distributor");
@@ -112,9 +113,9 @@ public class SupplierAgent extends Agent {
 
 			msg.addReceiver(distrID);
 			try {
-				msg.setContentObject((Serializable) orderLocation);
+				msg.setContentObject((Serializable) ordersLocation);
 			} catch (IOException e) {
-				System.err.format("Cannot send %s order to distributor", clientID);
+				System.err.format("Cannot send orders to distributor");
 				e.printStackTrace();
 			}
 			v.add(msg);

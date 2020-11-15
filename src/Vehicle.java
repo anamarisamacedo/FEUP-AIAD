@@ -1,21 +1,20 @@
-
 import java.util.ArrayList;
 import java.util.List;
 
 abstract class Vehicle {
+	private static int native_id = 0;
+	
     //total capacity
     protected int capacity;
     // vehicle speed when empty
     protected int baseSpeed;
-    // how much the truck speed decreases when an item is added
-    protected int speedDecrement;
     // array of currently loaded items
-    protected List<Integer> items=new ArrayList<Integer>();
+    protected List<Order> orders = new ArrayList<Order>();
     // vehicle id
     private int id;
 
-    public Vehicle(int id) {
-        this.id = id;
+    public Vehicle() {
+        this.id = Vehicle.native_id++;
         this.baseSpeed = 0;
     }
 
@@ -23,8 +22,20 @@ abstract class Vehicle {
         return this.baseSpeed;
     }
 
-    public List<Integer> getItems() {
-        return this.items;
+    public List<Order> getOrders() {
+        return this.orders;
     }
+
+	public int getId() {
+		return id;
+	}
+	
+	public int getCapacity() {
+        return this.capacity;
+    }
+	
+	public void addOrder(Order order) {
+		orders.add(order);
+	}
 
 }

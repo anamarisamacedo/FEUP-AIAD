@@ -3,7 +3,7 @@ import java.io.Serializable;
 public class Pair<A, B> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private final A first;
-    private final B second;
+    private B second;
 
     public Pair(A first, B second) {
         super();
@@ -44,5 +44,9 @@ public class Pair<A, B> implements Serializable {
 
     public B getSecond() {
         return second;
+    }
+    
+    public void setSecond(B newSecond) {
+         this.second = newSecond;
     }
 }

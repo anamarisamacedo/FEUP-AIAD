@@ -1,11 +1,8 @@
 public class Truck extends Vehicle {
 
-    public Truck(int id) {
-        super(id);
-        this.capacity = 0;
-    }
-
-    public int getCapacity() {
-        return this.capacity;
+    public Truck() {
+        super();
+        this.capacity = 2000;
+        this.baseSpeed = 50;
     }
 }
