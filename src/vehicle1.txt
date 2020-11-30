@@ -1,0 +1,5 @@
+Vehicle 1 (Motorcycle,capacity: 100) delivered from (Lat: 509 Lon: 103) to (Lat: 415 Lon: 114) in 1 place and took 149,000000 time;
+Vehicle 1 (Motorcycle,capacity: 100) delivered from (Lat: 509 Lon: 103) to (Lat: 400 Lon: 15) in 2 place and took 316,000000 time;
+Vehicle 1 (Motorcycle,capacity: 100) delivered from (Lat: 509 Lon: 103) to (Lat: 205 Lon: 712) in 3 place and took 9046,000000 time;
+Vehicle 1 (Motorcycle,capacity: 100) delivered from (Lat: 615 Lon: 846) to (Lat: 709 Lon: 557) in 1 place and took 1539,000000 time;
+Vehicle 1 (Motorcycle,capacity: 100) delivered from (Lat: 615 Lon: 846) to (Lat: 938 Lon: 844) in 2 place and took 3786,000000 time;

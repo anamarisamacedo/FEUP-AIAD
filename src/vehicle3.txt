@@ -1,0 +1,4 @@
+Vehicle 3 (Truck,capacity: 2000) delivered from (Lat: 509 Lon: 103) to (Lat: 725 Lon: 269) in 1 place and took 1484,000000 time;
+Vehicle 3 (Truck,capacity: 2000) delivered from (Lat: 509 Lon: 103) to (Lat: 767 Lon: 214) in 2 place and took 1580,000000 time;
+Vehicle 3 (Truck,capacity: 2000) delivered from (Lat: 509 Lon: 103) to (Lat: 450 Lon: 632) in 3 place and took 7084,000000 time;
+Vehicle 3 (Truck,capacity: 2000) delivered from (Lat: 509 Lon: 103) to (Lat: 971 Lon: 851) in 4 place and took 13472,000000 time;

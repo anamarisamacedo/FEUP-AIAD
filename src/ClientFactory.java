@@ -1,10 +1,6 @@
-import jade.core.Agent;
-import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAException;
 import jade.wrapper.StaleProxyException;
 import java.util.concurrent.TimeUnit;
+import sajas.core.Agent;
 
 public class ClientFactory extends Agent {
     private int totalClients = 15;
@@ -15,7 +11,7 @@ public class ClientFactory extends Agent {
         for(int i = 0; i < totalClients; i++)
         {
             try {
-                TimeUnit.SECONDS.sleep(3);
+                TimeUnit.SECONDS.sleep(2);
                 getContainerController().createNewAgent("Client-" + Integer.toString(i), "ClientAgent", null).start();
             }
             catch(StaleProxyException | InterruptedException e) {e.printStackTrace();}

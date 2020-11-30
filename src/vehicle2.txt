@@ -1,0 +1,2 @@
+Vehicle 2 (MailMan,capacity: 30) delivered from (Lat: 509 Lon: 103) to (Lat: 825 Lon: 629) in 1 place and took 47066,000000 time;
+Vehicle 2 (MailMan,capacity: 30) delivered from (Lat: 509 Lon: 103) to (Lat: 675 Lon: 221) in 1 place and took 5185,000000 time;
