@@ -91,10 +91,8 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 			//Crate Distributor
 			DistributorAgent da = new DistributorAgent();
 			agentContainer.acceptNewAgent("Distributor", da).start();
-			//if this is the coords to draw the agent, we'll have to change theses parameters to
-			//the client's actual coords
 			DefaultDrawableNode nodeDistr =
-					generateNode("Distributor", Color.WHITE,
+					generateNode("Distributor", Color.RED,
 							random.nextInt(WIDTH/2),random.nextInt(HEIGHT/2));
 			nodes.add(nodeDistr);
 			da.setNode(nodeDistr);
@@ -103,10 +101,8 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 			//Create supplier
 			SupplierAgent sa = new SupplierAgent();
 			agentContainer.acceptNewAgent("Supplier", sa).start();
-			//if this is the coords to draw the agent, we'll have to change theses parameters to
-			//the client's actual coords
 			DefaultDrawableNode nodeSupplier =
-					generateNode("Supplier", Color.WHITE,
+					generateNode("Supplier", Color.BLUE,
 							random.nextInt(WIDTH/2),random.nextInt(HEIGHT/2));
 			nodes.add(nodeSupplier);
 			sa.setNode(nodeSupplier);
@@ -117,11 +113,10 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 			{
 				ClientAgent ca = new ClientAgent();
 				agentContainer.acceptNewAgent("Client" + i, ca).start();
-				//if this is the coords to draw the agent, we'll have to change theses parameters to
-				//the client's actual coords
+				System.out.println("My location is: " + ca.getLocation().getLat());
 				DefaultDrawableNode node =
 						generateNode("Client" + i, Color.WHITE,
-								random.nextInt(WIDTH/2),random.nextInt(HEIGHT/2));
+								ca.getLocation().getLat(), ca.getLocation().getLon());
 				nodes.add(node);
 				ca.setNode(node);
 			}
@@ -133,8 +128,8 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	private DefaultDrawableNode generateNode(String label, Color color, int x, int y) {
         OvalNetworkItem oval = new OvalNetworkItem(x,y);
         oval.allowResizing(false);
-        oval.setHeight(5);
-        oval.setWidth(5);
+        oval.setHeight(30);
+        oval.setWidth(30);
         
 		DefaultDrawableNode node = new DefaultDrawableNode(label, oval);
 		node.setColor(color);
@@ -151,7 +146,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	}
 
 	private DisplaySurface dsurf;
-	private int WIDTH = 200, HEIGHT = 200;
+	private int WIDTH = 1200, HEIGHT = 1200;
 	private OpenSequenceGraph plot;
 
 	//TODO
@@ -165,6 +160,36 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		dsurf.addZoomable(display);
 		addSimEventListener(dsurf);
 		dsurf.display();
+
+		// graph
+//		if (plot != null) plot.dispose();
+//		plot = new OpenSequenceGraph("Service performance", this);
+//		plot.setAxisTitles("time", "% successful service executions");
+
+//		plot.addSequence("Consumers", new Sequence() {
+//			public double getSValue() {
+//				// iterate through consumers
+//				double v = 0.0;
+//				for(int i = 0; i < consumers.size(); i++) {
+//					v += consumers.get(i).getMovingAverage(10);
+//				}
+//				return v / consumers.size();
+//			}
+//		});
+//		plot.addSequence("Filtering Consumers", new Sequence() {
+//			public double getSValue() {
+//				// iterate through filtering consumers
+//				double v = 0.0;
+//				for(int i = 0; i < filteringConsumers.size(); i++) {
+//					v += filteringConsumers.get(i).getMovingAverage(10);
+//				}
+//				return v / filteringConsumers.size();
+//			}
+//		});
+		//plot.display();
+
+		getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
+		//getSchedule().scheduleActionAtInterval(100, plot, "step", Schedule.LAST);
 	}
 
 

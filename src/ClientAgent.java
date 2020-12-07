@@ -40,16 +40,21 @@ public class ClientAgent extends Agent {
 		order = makeOrder();
 		addBehaviour(new FIPARequestInitToSupplier(this, new ACLMessage(ACLMessage.REQUEST)));
 		addBehaviour(new FIPAClientResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
-		Random r = new Random();
 
-		this.location = new Location(r.nextInt(1000), r.nextInt(1000));
 		HelperClass.registerAgent(this, "Client");
 	}
 
 	public ClientAgent()
 	{
-		System.out.println("Constructor was called!");
+		Random r = new Random();
+		this.location = new Location(r.nextInt(1000), r.nextInt(1000));
 	}
+
+	public Location getLocation()
+	{
+		return this.location;
+	}
+
 
 	public void setNode(DefaultDrawableNode node) {
 		this.myNode = node;
