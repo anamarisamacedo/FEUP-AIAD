@@ -9,6 +9,7 @@ import sajas.core.behaviours.Behaviour;
 import sajas.core.behaviours.WakerBehaviour;
 import sajas.core.behaviours.WrapperBehaviour;
 import sajas.domain.DFService;
+import uchicago.src.sim.network.DefaultDrawableNode;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,12 +27,22 @@ public class DistributorAgent extends Agent {
 	
 	public List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
     private DistributorAgent distAgent;
-	
+    private DefaultDrawableNode myNode;
+
     public void setup() {
     	distAgent = this;
         addBehaviour(new FIPARequestResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
         System.out.println("Distributor active!!");
         HelperClass.registerAgent(this, "Distributor");
+    }
+
+    public DistributorAgent()
+    {
+
+    }
+
+    public void setNode(DefaultDrawableNode node) {
+        this.myNode = node;
     }
 
     //Receives requests from the supplier

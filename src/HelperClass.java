@@ -52,15 +52,11 @@ public class HelperClass {
         catch (FIPAException fe) { fe.printStackTrace(); }
     }
 
-    public static void main(String[] args) {
-        ArrayList<Pair<Item, Integer>> items = getItemsAndStock("Products.txt");
-        System.out.println("It's done!");
-    }
     public static ArrayList<Item> getItems(String filename)
     {
         ArrayList<Item> items = new ArrayList<>();
         try {
-            File myObj = new File(System.getProperty("user.dir") + "/" + filename);
+            File myObj = new File(System.getProperty("user.dir") + "/src/" + filename);
             Scanner myReader = new Scanner(myObj);
             String data = null;
             while (myReader.hasNextLine()) {
@@ -89,7 +85,7 @@ public class HelperClass {
         ArrayList<Pair<Item, Integer>> items = new ArrayList<>();
 
         try {
-            File myObj = new File(System.getProperty("user.dir") + "/" + filename);
+            File myObj = new File(System.getProperty("user.dir") + "/src/" + filename);
             Scanner myReader = new Scanner(myObj);
             String data = null;
             String stock = "";

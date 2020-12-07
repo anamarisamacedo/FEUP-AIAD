@@ -26,7 +26,6 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	private static final boolean BATCH_MODE = true;
 
 	private int N = 15;
-
 	
 	public static final boolean SEPARATE_CONTAINERS = false;
 	private ContainerController mainContainer;
@@ -87,9 +86,48 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		
 		clients = new ArrayList<ClientAgent>();
 		nodes = new ArrayList<DefaultDrawableNode>();
-		
-		
-		
+
+		try{
+			//Crate Distributor
+			DistributorAgent da = new DistributorAgent();
+			agentContainer.acceptNewAgent("Distributor", da).start();
+			//if this is the coords to draw the agent, we'll have to change theses parameters to
+			//the client's actual coords
+			DefaultDrawableNode nodeDistr =
+					generateNode("Distributor", Color.WHITE,
+							random.nextInt(WIDTH/2),random.nextInt(HEIGHT/2));
+			nodes.add(nodeDistr);
+			da.setNode(nodeDistr);
+
+
+			//Create supplier
+			SupplierAgent sa = new SupplierAgent();
+			agentContainer.acceptNewAgent("Supplier", sa).start();
+			//if this is the coords to draw the agent, we'll have to change theses parameters to
+			//the client's actual coords
+			DefaultDrawableNode nodeSupplier =
+					generateNode("Supplier", Color.WHITE,
+							random.nextInt(WIDTH/2),random.nextInt(HEIGHT/2));
+			nodes.add(nodeSupplier);
+			sa.setNode(nodeSupplier);
+
+
+			//Crate Clients
+			for(int i = 0; i < N_CLIENTS; i++)
+			{
+				ClientAgent ca = new ClientAgent();
+				agentContainer.acceptNewAgent("Client" + i, ca).start();
+				//if this is the coords to draw the agent, we'll have to change theses parameters to
+				//the client's actual coords
+				DefaultDrawableNode node =
+						generateNode("Client" + i, Color.WHITE,
+								random.nextInt(WIDTH/2),random.nextInt(HEIGHT/2));
+				nodes.add(node);
+				ca.setNode(node);
+			}
+		}catch (StaleProxyException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private DefaultDrawableNode generateNode(String label, Color color, int x, int y) {
@@ -112,9 +150,21 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		}
 	}
 
+	private DisplaySurface dsurf;
+	private int WIDTH = 200, HEIGHT = 200;
+	private OpenSequenceGraph plot;
+
 	//TODO
 	private void buildAndScheduleDisplay() {
-
+		// display surface
+		if (dsurf != null) dsurf.dispose();
+		dsurf = new DisplaySurface(this, "Service Consumer/Provider Display");
+		registerDisplaySurface("Service Consumer/Provider Display", dsurf);
+		Network2DDisplay display = new Network2DDisplay(nodes,WIDTH,HEIGHT);
+		dsurf.addDisplayableProbeable(display, "Network Display");
+		dsurf.addZoomable(display);
+		addSimEventListener(dsurf);
+		dsurf.display();
 	}
 
 

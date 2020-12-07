@@ -16,6 +16,7 @@ import sajas.core.behaviours.Behaviour;
 import sajas.core.behaviours.WakerBehaviour;
 import sajas.core.behaviours.WrapperBehaviour;
 import sajas.domain.DFService;
+import uchicago.src.sim.network.DefaultDrawableNode;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -42,6 +43,7 @@ public class SupplierAgent extends Agent {
 	private SupplierAgent supAgent;
 	private Supplier supplier = new Supplier();
 	public LocalDateTime dayStart;
+	private DefaultDrawableNode myNode;
 
 	public void setup() {
 		supAgent = this;
@@ -50,6 +52,15 @@ public class SupplierAgent extends Agent {
 		System.out.println("Supplier active!!");
 
 		HelperClass.registerAgent(this, "Supplier");
+	}
+
+	public SupplierAgent()
+	{
+
+	}
+
+	public void setNode(DefaultDrawableNode node) {
+		this.myNode = node;
 	}
 
 	class FIPARequestClientResp extends AchieveREResponder {

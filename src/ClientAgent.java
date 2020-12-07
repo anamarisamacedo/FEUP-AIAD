@@ -13,6 +13,8 @@ import sajas.core.behaviours.Behaviour;
 import sajas.core.behaviours.WakerBehaviour;
 import sajas.core.behaviours.WrapperBehaviour;
 import sajas.domain.DFService;
+import uchicago.src.sim.engine.Stepable;
+import uchicago.src.sim.network.DefaultDrawableNode;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -30,6 +32,8 @@ public class ClientAgent extends Agent {
 	String clientID = null;
 	Agent clientAgent = this;
 	Location location = null;
+	DefaultDrawableNode myNode;
+
 
 	public void setup() {
 		clientID = this.getAID().getLocalName();
@@ -40,6 +44,15 @@ public class ClientAgent extends Agent {
 
 		this.location = new Location(r.nextInt(1000), r.nextInt(1000));
 		HelperClass.registerAgent(this, "Client");
+	}
+
+	public ClientAgent()
+	{
+		System.out.println("Constructor was called!");
+	}
+
+	public void setNode(DefaultDrawableNode node) {
+		this.myNode = node;
 	}
 
 	class FIPARequestInitToSupplier extends AchieveREInitiator {
@@ -129,5 +142,6 @@ public class ClientAgent extends Agent {
 		}
 		return order;
 	}
+
 
 }
