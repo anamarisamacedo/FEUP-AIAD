@@ -28,6 +28,7 @@ public class DistributorAgent extends Agent {
         HelperClass.registerAgent(this, "Distributor");
     }
 
+    //TODO: Receive argument to determine which algorithm to use for the allocation
     public DistributorAgent()
     {
 
@@ -41,6 +42,7 @@ public class DistributorAgent extends Agent {
         return this.myNode;
     }
 
+    //TODO: complete function to follow path created by the distributor
     public void nextPos()
     {
         myNode.setX(myNode.getX() + 1);

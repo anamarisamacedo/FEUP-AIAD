@@ -10,6 +10,7 @@ import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Network2DDisplay;
 import uchicago.src.sim.gui.OvalNetworkItem;
+import uchicago.src.sim.network.DefaultDrawableEdge;
 import uchicago.src.sim.network.DefaultDrawableNode;
 
 import java.awt.*;
@@ -74,7 +75,11 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		
 		launchAgents();
 	}
-	
+
+	//TODO: Add distributor and supplier's correct coords
+	//TODO: Add edge to link distributor and the agent he's moving towards.
+	//TODO: Fix the labels on each agent
+	//TODO: Ask professor for ways to make the simulation look better
 	private void launchAgents() {
 		Random random = new Random(System.currentTimeMillis());
 		
@@ -99,6 +104,10 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 							random.nextInt(WIDTH/2),random.nextInt(HEIGHT/2));
 			nodes.add(nodeSupplier);
 			sa.setNode(nodeSupplier);
+
+			DefaultDrawableEdge sampleEdge = new DefaultDrawableEdge(nodeDistr, nodeSupplier);
+			nodeDistr.addOutEdge(sampleEdge);
+			nodeSupplier.addInEdge(sampleEdge);
 
 			//Create pickupLocations
 			List<Location> pickupLocations = sa.getPickupLocations();
