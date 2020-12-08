@@ -34,8 +34,6 @@ import java.util.Vector;
 import java.util.*;
 
 public class SupplierAgent extends Agent {
-
-	
 	public int orderCount = 0;
 	public int clientCount = 10;
 	public ArrayList<Order> orders = new ArrayList<Order>();
@@ -57,6 +55,11 @@ public class SupplierAgent extends Agent {
 	public SupplierAgent()
 	{
 
+	}
+
+	public List<Location> getPickupLocations()
+	{
+		return supplier.getPickupLocations();
 	}
 
 	public void setNode(DefaultDrawableNode node) {

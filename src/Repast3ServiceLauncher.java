@@ -107,19 +107,28 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 			nodes.add(nodeSupplier);
 			sa.setNode(nodeSupplier);
 
+			//Create pickupLocations
+			List<Location> pickupLocations = sa.getPickupLocations();
+			for(int i = 0; i < pickupLocations.size(); i++)
+			{
+				DefaultDrawableNode node =
+						generateNode("Pickup Location" + i, Color.GREEN,
+								pickupLocations.get(i).getLat(), pickupLocations.get(i).getLon());
+				nodes.add(node);
+			}
 
 			//Crate Clients
 			for(int i = 0; i < N_CLIENTS; i++)
 			{
 				ClientAgent ca = new ClientAgent();
 				agentContainer.acceptNewAgent("Client" + i, ca).start();
-				System.out.println("My location is: " + ca.getLocation().getLat());
 				DefaultDrawableNode node =
 						generateNode("Client" + i, Color.WHITE,
 								ca.getLocation().getLat(), ca.getLocation().getLon());
 				nodes.add(node);
 				ca.setNode(node);
 			}
+
 		}catch (StaleProxyException e) {
 			e.printStackTrace();
 		}
@@ -130,10 +139,8 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
         oval.allowResizing(false);
         oval.setHeight(30);
         oval.setWidth(30);
-        
 		DefaultDrawableNode node = new DefaultDrawableNode(label, oval);
 		node.setColor(color);
-        
 		return node;
 	}
 
@@ -149,12 +156,11 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	private int WIDTH = 1200, HEIGHT = 1200;
 	private OpenSequenceGraph plot;
 
-	//TODO
 	private void buildAndScheduleDisplay() {
 		// display surface
 		if (dsurf != null) dsurf.dispose();
-		dsurf = new DisplaySurface(this, "Service Consumer/Provider Display");
-		registerDisplaySurface("Service Consumer/Provider Display", dsurf);
+		dsurf = new DisplaySurface(this, "Service Client/Distributor/Supplier Display");
+		registerDisplaySurface("Service Client/Distributor/Supplier Display", dsurf);
 		Network2DDisplay display = new Network2DDisplay(nodes,WIDTH,HEIGHT);
 		dsurf.addDisplayableProbeable(display, "Network Display");
 		dsurf.addZoomable(display);

@@ -16,6 +16,11 @@ public class Supplier {
 		pickups.add(l2);
 		pickups.add(l3);
 	}
+
+	public List<Location> getPickupLocations()
+	{
+		return this.pickups;
+	}
 	
 	//Get nearest pickup to the orders received by argument
 	public Location allocatePickUp(ArrayList<Order> orders) {
