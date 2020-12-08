@@ -1,19 +1,10 @@
-
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import jade.core.AID;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
-import sajas.core.Runtime;
-import sajas.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-
+import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
+import sajas.wrapper.ContainerController;
 import uchicago.src.sim.analysis.OpenSequenceGraph;
-import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
@@ -21,18 +12,23 @@ import uchicago.src.sim.gui.Network2DDisplay;
 import uchicago.src.sim.gui.OvalNetworkItem;
 import uchicago.src.sim.network.DefaultDrawableNode;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class Repast3ServiceLauncher extends Repast3Launcher {
 
 	private static final boolean BATCH_MODE = true;
 
 	private int N = 15;
+
+	private DistributorAgent dAgent;
 	
 	public static final boolean SEPARATE_CONTAINERS = false;
 	private ContainerController mainContainer;
 	private ContainerController agentContainer;
-	
-	private List<ClientAgent> clients;
-	
+
 	private static List<DefaultDrawableNode> nodes;
 	
 	private boolean runInBatchMode;
@@ -83,20 +79,17 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		Random random = new Random(System.currentTimeMillis());
 		
 		int N_CLIENTS = N;
-		
-		clients = new ArrayList<ClientAgent>();
 		nodes = new ArrayList<DefaultDrawableNode>();
 
 		try{
 			//Crate Distributor
-			DistributorAgent da = new DistributorAgent();
-			agentContainer.acceptNewAgent("Distributor", da).start();
+			dAgent = new DistributorAgent();
+			agentContainer.acceptNewAgent("Distributor", dAgent).start();
 			DefaultDrawableNode nodeDistr =
 					generateNode("Distributor", Color.RED,
 							random.nextInt(WIDTH/2),random.nextInt(HEIGHT/2));
 			nodes.add(nodeDistr);
-			da.setNode(nodeDistr);
-
+			dAgent.setNode(nodeDistr);
 
 			//Create supplier
 			SupplierAgent sa = new SupplierAgent();
@@ -167,35 +160,13 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		addSimEventListener(dsurf);
 		dsurf.display();
 
-		// graph
-//		if (plot != null) plot.dispose();
-//		plot = new OpenSequenceGraph("Service performance", this);
-//		plot.setAxisTitles("time", "% successful service executions");
-
-//		plot.addSequence("Consumers", new Sequence() {
-//			public double getSValue() {
-//				// iterate through consumers
-//				double v = 0.0;
-//				for(int i = 0; i < consumers.size(); i++) {
-//					v += consumers.get(i).getMovingAverage(10);
-//				}
-//				return v / consumers.size();
-//			}
-//		});
-//		plot.addSequence("Filtering Consumers", new Sequence() {
-//			public double getSValue() {
-//				// iterate through filtering consumers
-//				double v = 0.0;
-//				for(int i = 0; i < filteringConsumers.size(); i++) {
-//					v += filteringConsumers.get(i).getMovingAverage(10);
-//				}
-//				return v / filteringConsumers.size();
-//			}
-//		});
-		//plot.display();
-
 		getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
-		//getSchedule().scheduleActionAtInterval(100, plot, "step", Schedule.LAST);
+		getSchedule().scheduleActionAtInterval(100, this, "step", Schedule.INTERVAL_UPDATER);
+	}
+
+	public void step()
+	{
+		dAgent.nextPos();
 	}
 
 
