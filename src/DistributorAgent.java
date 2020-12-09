@@ -19,6 +19,7 @@ public class DistributorAgent extends Agent {
 	
 	public List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
     private DistributorAgent distAgent;
+    private Distributor distributor;
     private DefaultDrawableNode myNode;
 
     public void setup() {
@@ -31,7 +32,23 @@ public class DistributorAgent extends Agent {
     //TODO: Receive argument to determine which algorithm to use for the allocation
     public DistributorAgent()
     {
+    }
 
+    public List<Vehicle> getFleet()
+    {
+        if(distributor == null)
+        {
+            System.out.println("It's null!!");
+        }
+        return distributor.getFleet();
+    }
+
+    public void moveVehicles()
+    {
+        if(distributor != null)
+        {
+            distributor.moveVehicles();
+        }
     }
 
     public void setNode(DefaultDrawableNode node) {
@@ -42,7 +59,7 @@ public class DistributorAgent extends Agent {
         return this.myNode;
     }
 
-    //TODO: complete function to follow path created by the distributor
+    //TODO: delete this
     public void nextPos()
     {
         myNode.setX(myNode.getX() + 1);
@@ -67,8 +84,9 @@ public class DistributorAgent extends Agent {
                 System.out.println("Got the orders, here is the first's date: " + orders.get(0).getDate());
                 System.out.println("Got the pickup location: " + requestMessage.getSecond().getLat() + ", " + requestMessage.getSecond().getLon());
                
-                Distributor dist = new Distributor();
-                time_per_order = dist.allocate(orders, pickup);
+                distributor = new Distributor();
+
+                time_per_order = distributor.allocate(orders, pickup);
                 
                 addBehaviour( new FIPARequestClientInit(distAgent, new ACLMessage(ACLMessage.REQUEST)));
 

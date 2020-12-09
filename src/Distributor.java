@@ -3,7 +3,18 @@ import java.util.*;
 
 class Distributor {
 
+	private List<Vehicle> fleet;
+
 	public Distributor() {
+	}
+
+	public void moveVehicles()
+	{
+		for(Vehicle v : fleet)
+		{
+			System.out.println("Updating vehicles!");
+			v.setLocation(new Location(v.getLocation().getLat()+10, v.getLocation().getLon()+10));
+		}
 	}
 
 	public Vehicle generateVehicle() {
@@ -26,7 +37,7 @@ class Distributor {
 		List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
 
 		Vehicle vehicle;
-		List<Vehicle> fleet = new ArrayList<Vehicle>();
+		this.fleet = new ArrayList<Vehicle>();
 
 		int size = orders.size();
 		while (size > 0) {
@@ -49,11 +60,11 @@ class Distributor {
 			}
 
 			if (vehicle.getOrders().size() > 0)
-				fleet.add(vehicle);
+				this.fleet.add(vehicle);
 		}
 
-		for (int i = 0; i < fleet.size(); i++) {
-			time_per_order.addAll(this.path(fleet.get(i), source));
+		for (int i = 0; i < this.fleet.size(); i++) {
+			time_per_order.addAll(this.path(this.fleet.get(i), source));
 		}
 
 		return time_per_order;
@@ -135,6 +146,7 @@ class Distributor {
 						v.getId(), v.getType(), v.capacity, source.getLat(), source.getLon(), currLoc.getLat(), currLoc.getLon(), count, time);
 				pw.println(print);
 				time_per_order.add(new Pair<Order, Double>(v.getOrders().get(min), time));
+				v.addLocationToPath(v.getOrders().get(min).getLocation());
 			}
 		}
 
@@ -142,5 +154,10 @@ class Distributor {
 			pw.close();
 
 		return time_per_order;
+	}
+
+	public List<Vehicle> getFleet()
+	{
+		return this.fleet;
 	}
 }

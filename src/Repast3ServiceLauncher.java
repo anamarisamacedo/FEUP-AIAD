@@ -87,7 +87,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		nodes = new ArrayList<DefaultDrawableNode>();
 
 		try{
-			//Crate Distributor
+			//Create Distributor
 			dAgent = new DistributorAgent();
 			agentContainer.acceptNewAgent("Distributor", dAgent).start();
 			DefaultDrawableNode nodeDistr =
@@ -97,20 +97,21 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 			dAgent.setNode(nodeDistr);
 
 			//Create supplier
-			SupplierAgent sa = new SupplierAgent();
-			agentContainer.acceptNewAgent("Supplier", sa).start();
+			SupplierAgent sAgent = new SupplierAgent();
+			agentContainer.acceptNewAgent("Supplier", sAgent).start();
 			DefaultDrawableNode nodeSupplier =
 					generateNode("Supplier", Color.BLUE,
 							random.nextInt(WIDTH/2),random.nextInt(HEIGHT/2));
 			nodes.add(nodeSupplier);
-			sa.setNode(nodeSupplier);
+			sAgent.setNode(nodeSupplier);
 
+			//Sample edge
 			DefaultDrawableEdge sampleEdge = new DefaultDrawableEdge(nodeDistr, nodeSupplier);
 			nodeDistr.addOutEdge(sampleEdge);
 			nodeSupplier.addInEdge(sampleEdge);
 
 			//Create pickupLocations
-			List<Location> pickupLocations = sa.getPickupLocations();
+			List<Location> pickupLocations = sAgent.getPickupLocations();
 			for(int i = 0; i < pickupLocations.size(); i++)
 			{
 				DefaultDrawableNode node =
@@ -119,7 +120,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 				nodes.add(node);
 			}
 
-			//Crate Clients
+			//Create Clients
 			for(int i = 0; i < N_CLIENTS; i++)
 			{
 				ClientAgent ca = new ClientAgent();
@@ -171,11 +172,27 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 
 		getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
 		getSchedule().scheduleActionAtInterval(100, this, "step", Schedule.INTERVAL_UPDATER);
+		getSchedule().scheduleActionAtInterval(1000, this, "createVehicleNodes", Schedule.ONE_TIME_UPDATER);
 	}
 
 	public void step()
 	{
-		dAgent.nextPos();
+		if(dAgent != null)
+		{
+			dAgent.nextPos();
+			dAgent.moveVehicles();
+		}
+	}
+
+	public void createVehicleNodes()
+	{
+		//Create Vehicles
+		List<Vehicle> fleet = dAgent.getFleet();
+		for(Vehicle v : fleet)
+		{
+			DefaultDrawableNode node = generateNode("Vehicle", Color.GRAY, v.getLocation().getLat(), v.getLocation().getLon());
+			nodes.add(node);
+		}
 	}
 
 

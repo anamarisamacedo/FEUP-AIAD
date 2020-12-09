@@ -14,6 +14,11 @@ abstract class Vehicle {
     protected List<Order> orders = new ArrayList<Order>();
     // vehicle id
     private int id;
+    //current location
+    protected Location location;
+    //path the vehicle will follow
+    protected List<Location> path;
+    private int lastVisited = 0;
 
     public Vehicle() {
         this.id = Vehicle.native_id++;
@@ -44,4 +49,29 @@ abstract class Vehicle {
 		orders.add(order);
 	}
 
+	public Location getLocation()
+    {
+        return this.location;
+    }
+
+    public void setLocation(Location location)
+    {
+        this.location = location;
+    }
+
+    //vehicle will follow the exact order of path
+    public void addLocationToPath(Location location)
+    {
+        this.path.add(location);
+    }
+
+    public Location getNextStop()
+    {
+        return this.path.get(lastVisited);
+    }
+
+    public void iterateStop()
+    {
+        this.lastVisited++;
+    }
 }
