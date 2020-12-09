@@ -3,9 +3,10 @@ import java.util.*;
 
 class Distributor {
 
-	private List<Vehicle> fleet;
+	private List<Vehicle> fleet = new ArrayList<Vehicle>();
 
 	public Distributor() {
+		generateVehicles(100);
 	}
 
 	public void moveVehicles()
@@ -17,31 +18,33 @@ class Distributor {
 		}
 	}
 
-	public Vehicle generateVehicle() {
-		Vehicle vehicle;
-		Random r = new Random();
-		int result = r.nextInt(99) + 1;
+	public void generateVehicles(int vehicleNr) {
+		for(int i = 0; i < vehicleNr; i++)
+		{
+			Vehicle vehicle;
+			Random r = new Random();
+			int result = r.nextInt(99) + 1;
 
-		if (0 < result && result <= 30) {
-			vehicle = new MailMan();
-		} else if (31 <= result && result <= 50) {
-			vehicle = new Motorcycle();
-		} else
-			vehicle = new Truck();
+			if (0 < result && result <= 30) {
+				vehicle = new MailMan();
+			} else if (31 <= result && result <= 50) {
+				vehicle = new Motorcycle();
+			} else
+				vehicle = new Truck();
 
-		return vehicle;
+			fleet.add(vehicle);
+		}
 	}
 
 	//TODO: Crate different algorithms to study their performance
 	public List<Pair<Order, Double>> allocate(ArrayList<Order> orders, Location source) {
 		List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
 
-		Vehicle vehicle;
-		this.fleet = new ArrayList<Vehicle>();
 
 		int size = orders.size();
 		while (size > 0) {
-			vehicle = this.generateVehicle();
+
+			Vehicle vehicle = this.fleet.get(size);
 			int occupancy = 0;
 
 			while (occupancy <= vehicle.getCapacity() && size > 0) {
@@ -58,9 +61,6 @@ class Distributor {
 				}
 				break;
 			}
-
-			if (vehicle.getOrders().size() > 0)
-				this.fleet.add(vehicle);
 		}
 
 		for (int i = 0; i < this.fleet.size(); i++) {

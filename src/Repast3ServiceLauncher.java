@@ -3,12 +3,10 @@ import jade.core.ProfileImpl;
 import jade.wrapper.StaleProxyException;
 import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
+import sajas.wrapper.ContainerController;
 import uchicago.src.reflector.RangePropertyDescriptor;
 import uchicago.src.sim.analysis.OpenSequenceGraph;
 import uchicago.src.sim.analysis.Sequence;
-import uchicago.src.sim.engine.BasicAction;
-import sajas.wrapper.ContainerController;
-import uchicago.src.sim.analysis.OpenSequenceGraph;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
@@ -33,7 +31,8 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	private int SUPPLIER_LON_2 = 500;
 	private int SUPPLIER_LAT_3 = 500;
 	private int SUPPLIER_LON_3 = 500;
-	
+
+	private Repast3ServiceLauncher repastLauncher = this;
 
 	private DistributorAgent dAgent;
 	
@@ -42,6 +41,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	private ContainerController agentContainer;
 	private List<ClientAgent> clients;
 	private List<Location> pickupLocations;
+	private boolean fleetReady;
 
 	private static List<DefaultDrawableNode> nodes;
 	
@@ -166,7 +166,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 			agentContainer.acceptNewAgent("Distributor", dAgent).start();
 			DefaultDrawableNode nodeDistr =
 					generateNode("Distributor", Color.RED,
-							random.nextInt(WIDTH/2),random.nextInt(HEIGHT/2));
+							dAgent.getLocation().getLat(), dAgent.getLocation().getLon());
 			nodes.add(nodeDistr);
 			dAgent.setNode(nodeDistr);
 			
@@ -179,7 +179,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 			pickupLocations.add(l3);
 
 			//Create supplier
-			SupplierAgent sAgent = new SupplierAgent();
+			SupplierAgent sAgent = new SupplierAgent(pickupLocations);
 			agentContainer.acceptNewAgent("Supplier", sAgent).start();
 			DefaultDrawableNode nodeSupplier =
 					generateNode("Supplier", Color.BLUE,
@@ -200,33 +200,42 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 								pickupLocations.get(i).getLat(), pickupLocations.get(i).getLon());
 				nodes.add(node);
 			}
+			//Create clients
+			for(int i = 0; i < N_CLIENTS; i++)
+			{
+				generateClients();
+			}
+			//Create vehicles nodes
+			for(int i = 0; i < dAgent.getFleet().size(); i++)
+			{
+				DefaultDrawableNode node = generateNode("Vehicle" + i, Color.GRAY, dAgent.getLocation().getLat(), dAgent.getLocation().getLon());
+				nodes.add(node);
+				dAgent.getFleet().get(i).setNode(node);
+			}
 
-			//Generate Clients
-			if(clientCount<=N_CLIENTS)
-			getSchedule().scheduleActionAtInterval(180, this, "generateClients", Schedule.INTERVAL_UPDATER);
-			
 		}catch (StaleProxyException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
+	//TODO: make this function deschedule the actionAtInterval which calls it, otherwise it runs infinetely
 	public void generateClients() {
-		//Crate Clients
-			clientCount++;
-			ClientAgent ca = new ClientAgent();
-			try {
-				agentContainer.acceptNewAgent("Client" + clientCount, ca).start();
-			} catch (StaleProxyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			clients.add(ca);
-			DefaultDrawableNode node =
-					generateNode("Client" + clientCount , Color.WHITE,
-							ca.getLocation().getLat(), ca.getLocation().getLon());
-			nodes.add(node);
-			ca.setNode(node);
-		
+		//Create Clients
+		clientCount++;
+		System.out.println("Current client count is: " + clientCount);
+		ClientAgent ca = new ClientAgent();
+		try {
+			agentContainer.acceptNewAgent("Client" + clientCount, ca).start();
+		} catch (StaleProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		clients.add(ca);
+		DefaultDrawableNode node =
+				generateNode("Client" + clientCount , Color.WHITE,
+						ca.getLocation().getLat(), ca.getLocation().getLon());
+		nodes.add(node);
+		ca.setNode(node);
 	}
 
 	private DefaultDrawableNode generateNode(String label, Color color, int x, int y) {
@@ -293,30 +302,14 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		});
 		
 		plot.display();
-
 		getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
 		getSchedule().scheduleActionAtInterval(100, this, "step", Schedule.INTERVAL_UPDATER);
-		getSchedule().scheduleActionAtInterval(1000, this, "createVehicleNodes", Schedule.ONE_TIME_UPDATER);
 	}
 
 	public void step()
 	{
-		if(dAgent != null)
-		{
-			dAgent.nextPos();
-			dAgent.moveVehicles();
-		}
-	}
-
-	public void createVehicleNodes()
-	{
-		//Create Vehicles
-		List<Vehicle> fleet = dAgent.getFleet();
-		for(Vehicle v : fleet)
-		{
-			DefaultDrawableNode node = generateNode("Vehicle", Color.GRAY, v.getLocation().getLat(), v.getLocation().getLon());
-			nodes.add(node);
-		}
+		dAgent.nextPos();
+		dAgent.moveVehicles();
 	}
 
 
@@ -333,3 +326,4 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	}
 
 }
+

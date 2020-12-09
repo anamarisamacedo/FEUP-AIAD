@@ -1,41 +1,22 @@
-import jade.content.onto.basic.Action;
 import jade.core.AID;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAException;
-import jade.domain.FIPANames;
-import jade.domain.JADEAgentManagement.JADEManagementOntology;
-import jade.domain.JADEAgentManagement.QueryAgentsOnLocation;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import sajas.core.Agent;
 import sajas.proto.AchieveREInitiator;
 import sajas.proto.AchieveREResponder;
-import sajas.core.Agent;
-import sajas.core.behaviours.Behaviour;
-import sajas.core.behaviours.WakerBehaviour;
-import sajas.core.behaviours.WrapperBehaviour;
-import sajas.domain.DFService;
 import uchicago.src.sim.network.DefaultDrawableNode;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Vector;
-import java.util.*;
 
 public class SupplierAgent extends Agent {
 	public int orderCount = 0;
-	public int clientCount = 10;
 	public ArrayList<Order> orders = new ArrayList<Order>();
 	public ArrayList<Order> finalOrders = new ArrayList<Order>();
 	private SupplierAgent supAgent;

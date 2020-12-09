@@ -1,3 +1,5 @@
+import uchicago.src.sim.network.DefaultDrawableNode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,12 +19,25 @@ abstract class Vehicle {
     //current location
     protected Location location;
     //path the vehicle will follow
-    protected List<Location> path;
+    protected List<Location> path = new ArrayList<Location>();
     private int lastVisited = 0;
+
+    public DefaultDrawableNode getNode() {
+        return myNode;
+    }
+
+    public void setNode(DefaultDrawableNode myNode) {
+        this.myNode = myNode;
+    }
+
+    DefaultDrawableNode myNode;
+
 
     public Vehicle() {
         this.id = Vehicle.native_id++;
         this.baseSpeed = 0;
+        this.location = new Location(0, 0);
+        this.myNode = new DefaultDrawableNode();
     }
 
     public int baseSpeed() {
@@ -57,6 +72,9 @@ abstract class Vehicle {
     public void setLocation(Location location)
     {
         this.location = location;
+        this.myNode.setX(location.getLat());
+        this.myNode.setY(location.getLon());
+        System.out.println("My new location is: " + myNode.getX() + ", " + myNode.getY());
     }
 
     //vehicle will follow the exact order of path
