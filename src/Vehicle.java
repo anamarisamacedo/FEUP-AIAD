@@ -1,7 +1,11 @@
 import uchicago.src.sim.network.DefaultDrawableNode;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+
+import static java.lang.Math.abs;
 
 abstract class Vehicle {
 	private static int native_id = 0;
@@ -18,9 +22,13 @@ abstract class Vehicle {
     private int id;
     //current location
     protected Location location;
+
+    public Queue<Location> getPath() {
+        return path;
+    }
+
     //path the vehicle will follow
-    protected List<Location> path = new ArrayList<Location>();
-    private int lastVisited = 0;
+    protected Queue<Location> path = new LinkedList<Location>();
 
     public DefaultDrawableNode getNode() {
         return myNode;
@@ -74,7 +82,6 @@ abstract class Vehicle {
         this.location = location;
         this.myNode.setX(location.getLat());
         this.myNode.setY(location.getLon());
-        System.out.println("My new location is: " + myNode.getX() + ", " + myNode.getY());
     }
 
     //vehicle will follow the exact order of path
@@ -85,11 +92,69 @@ abstract class Vehicle {
 
     public Location getNextStop()
     {
-        return this.path.get(lastVisited);
+        return this.path.peek();
     }
 
-    public void iterateStop()
+    public void moveVehicle()
     {
-        this.lastVisited++;
+        System.out.println("My lat is: " + this.getLocation().getLat());
+        System.out.println("My lon is: " + this.getLocation().getLon());
+        if(this.path.isEmpty())
+        {
+            System.out.println("It's empty");
+            return;
+        }
+
+        System.out.println("GONNA UPDATE POS");
+
+        Location nextLocation = this.getNextStop();
+        if(location.equals(this.getNextStop()))
+        {
+            this.path.remove();
+
+            if(this.path.isEmpty())
+            {
+                return;
+            }
+        }
+
+        int xIncrement = 0;
+        int yIncrement = 0;
+
+        if(abs(nextLocation.getLat() - this.getLocation().getLat()) < this.baseSpeed)
+        {
+            xIncrement = nextLocation.getLat() - this.getLocation().getLat();
+        }
+        else
+        {
+            if(nextLocation.getLat() < this.location.getLat())
+            {
+                xIncrement = -1*this.baseSpeed;
+            }
+            else
+            {
+                xIncrement = this.baseSpeed;
+            }
+        }
+
+        if(abs(nextLocation.getLon() - this.getLocation().getLon()) < this.baseSpeed)
+        {
+            yIncrement = nextLocation.getLon() - this.getLocation().getLon();
+        }
+        else
+        {
+            if(nextLocation.getLon() < this.location.getLon())
+            {
+                yIncrement = -1*this.baseSpeed;
+            }
+            else
+            {
+                yIncrement = this.baseSpeed;
+            }
+        }
+        this.setLocation(new Location(this.location.getLat()+xIncrement, this.location.getLat()+yIncrement));
+        System.out.println("My next lat is: " + this.getLocation().getLat());
+        System.out.println("My next lon is: " + this.getLocation().getLon());
     }
+
 }

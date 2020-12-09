@@ -4,21 +4,27 @@ import java.util.*;
 class Distributor {
 
 	private List<Vehicle> fleet = new ArrayList<Vehicle>();
+	private Location location;
 
 	public Distributor() {
 		generateVehicles(100);
+	}
+
+	public Distributor(Location location) {
+		generateVehicles(100);
+		this.location = location;
 	}
 
 	public void moveVehicles()
 	{
 		for(Vehicle v : fleet)
 		{
-			System.out.println("Updating vehicles!");
-			v.setLocation(new Location(v.getLocation().getLat()+10, v.getLocation().getLon()+10));
+			v.moveVehicle();
 		}
 	}
 
 	public void generateVehicles(int vehicleNr) {
+		List<Vehicle> vehicles = new ArrayList<Vehicle>();
 		for(int i = 0; i < vehicleNr; i++)
 		{
 			Vehicle vehicle;
@@ -32,8 +38,9 @@ class Distributor {
 			} else
 				vehicle = new Truck();
 
-			fleet.add(vehicle);
+			vehicles.add(vehicle);
 		}
+		this.fleet = vehicles;
 	}
 
 	//TODO: Crate different algorithms to study their performance
@@ -64,7 +71,10 @@ class Distributor {
 		}
 
 		for (int i = 0; i < this.fleet.size(); i++) {
-			time_per_order.addAll(this.path(this.fleet.get(i), source));
+			if(this.getFleet().get(i).getOrders().size() > 0)
+			{
+				time_per_order.addAll(this.path(this.fleet.get(i), source));
+			}
 		}
 
 		return time_per_order;
@@ -87,6 +97,9 @@ class Distributor {
 		int count = 0;
 		// current location
 		Location currLoc = source;
+
+		//First location of the vehicle is the distributor's location
+		v.addLocationToPath(this.location);
 
 		// get all delivery locations
 		List<Location> locations = new ArrayList<Location>();
@@ -149,6 +162,9 @@ class Distributor {
 				v.addLocationToPath(v.getOrders().get(min).getLocation());
 			}
 		}
+
+		//Last location of the vehicle is the distributor's location
+		v.addLocationToPath(this.location);
 
 		if (pw != null)
 			pw.close();

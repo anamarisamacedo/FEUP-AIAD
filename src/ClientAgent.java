@@ -1,19 +1,10 @@
 
 import jade.core.AID;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
+import sajas.core.Agent;
 import sajas.proto.AchieveREInitiator;
 import sajas.proto.AchieveREResponder;
-import sajas.core.Agent;
-import sajas.core.behaviours.Behaviour;
-import sajas.core.behaviours.WakerBehaviour;
-import sajas.core.behaviours.WrapperBehaviour;
-import sajas.domain.DFService;
-import uchicago.src.sim.engine.Stepable;
 import uchicago.src.sim.network.DefaultDrawableNode;
 
 import java.io.IOException;
@@ -40,7 +31,6 @@ public class ClientAgent extends Agent {
 		order = makeOrder();
 		addBehaviour(new FIPARequestInitToSupplier(this, new ACLMessage(ACLMessage.REQUEST)));
 		addBehaviour(new FIPAClientResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
-
 		HelperClass.registerAgent(this, "Client");
 	}
 

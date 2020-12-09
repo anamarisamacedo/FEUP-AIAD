@@ -31,6 +31,7 @@ public class DistributorAgent extends Agent {
         this.location = location;
     }
 
+
     public void setup() {
     	distAgent = this;
         addBehaviour(new FIPARequestResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
@@ -91,7 +92,7 @@ public class DistributorAgent extends Agent {
                 System.out.println("Got the orders, here is the first's date: " + orders.get(0).getDate());
                 System.out.println("Got the pickup location: " + requestMessage.getSecond().getLat() + ", " + requestMessage.getSecond().getLon());
 
-                distributor = new Distributor();
+                distributor = new Distributor(new Location(0,0));
 
                 time_per_order = distributor.allocate(orders, pickup);
                 
