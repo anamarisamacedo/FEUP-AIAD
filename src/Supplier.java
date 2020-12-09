@@ -4,22 +4,19 @@ import java.util.ArrayList;
 
 public class Supplier {
 
-	//Pickups locations
-	Location l1 = new Location(509, 103);
-	Location l2 = new Location(101, 784);
-	Location l3 = new Location(615, 846);
-
 	private List<Location> pickups = new ArrayList<>();
 
 	public Supplier() {
-		pickups.add(l1);
-		pickups.add(l2);
-		pickups.add(l3);
 	}
 
 	public List<Location> getPickupLocations()
 	{
 		return this.pickups;
+	}
+	
+	public void addPickupLocations(Location l)
+	{
+		this.pickups.add(l);
 	}
 	
 	//Get nearest pickup to the orders received by argument

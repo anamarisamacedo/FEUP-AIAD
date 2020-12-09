@@ -1,5 +1,7 @@
-Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 101 Lon: 784) to (Lat: 0 Lon: 560) in 1 place and took 1207,000000 time;
-Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 101 Lon: 784) to (Lat: 353 Lon: 441) in 2 place and took 3982,000000 time;
-Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 101 Lon: 784) to (Lat: 138 Lon: 173) in 3 place and took 6343,000000 time;
-Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 101 Lon: 784) to (Lat: 532 Lon: 963) in 4 place and took 21930,000000 time;
-Vehicle 0 (MailMan,capacity: 30) delivered from (Lat: 615 Lon: 846) to (Lat: 145 Lon: 427) in 1 place and took 49557,000000 time;
+Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 300 Lon: 700) to (Lat: 275 Lon: 441) in 1 place and took 1354,000000 time;
+Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 300 Lon: 700) to (Lat: 454 Lon: 384) in 2 place and took 2059,000000 time;
+Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 300 Lon: 700) to (Lat: 518 Lon: 220) in 3 place and took 2679,000000 time;
+Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 300 Lon: 700) to (Lat: 716 Lon: 255) in 4 place and took 3488,000000 time;
+Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 300 Lon: 700) to (Lat: 118 Lon: 26) in 5 place and took 11689,000000 time;
+Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 300 Lon: 700) to (Lat: 550 Lon: 904) in 6 place and took 30839,000000 time;
+Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 300 Lon: 700) to (Lat: 474 Lon: 970) in 7 place and took 31042,000000 time;
