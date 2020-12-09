@@ -1,27 +1,26 @@
-
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import jade.core.AID;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
-import sajas.core.Runtime;
-import sajas.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-
+import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import uchicago.src.reflector.RangePropertyDescriptor;
 import uchicago.src.sim.analysis.OpenSequenceGraph;
 import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.BasicAction;
+import sajas.wrapper.ContainerController;
+import uchicago.src.sim.analysis.OpenSequenceGraph;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Network2DDisplay;
 import uchicago.src.sim.gui.OvalNetworkItem;
+import uchicago.src.sim.network.DefaultDrawableEdge;
 import uchicago.src.sim.network.DefaultDrawableNode;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Repast3ServiceLauncher extends Repast3Launcher {
 
@@ -35,13 +34,15 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	private int SUPPLIER_LAT_3 = 500;
 	private int SUPPLIER_LON_3 = 500;
 	
+
+	private DistributorAgent dAgent;
 	
 	public static final boolean SEPARATE_CONTAINERS = false;
 	private ContainerController mainContainer;
 	private ContainerController agentContainer;
-	
 	private List<ClientAgent> clients;
 	private List<Location> pickupLocations;
+
 	private static List<DefaultDrawableNode> nodes;
 	
 	private boolean runInBatchMode;
@@ -145,6 +146,12 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		
 		launchAgents();
 	}
+
+
+	//TODO: Add distributor and supplier's correct coords
+	//TODO: Add edge to link distributor and the agent he's moving towards.
+	//TODO: Fix the labels on each agent
+	//TODO: Ask professor for ways to make the simulation look better
 	private int clientCount = 0;
 	private void launchAgents() {
 		Random random = new Random(System.currentTimeMillis());
@@ -155,14 +162,13 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		
 		try{
 			//Crate Distributor
-			DistributorAgent da = new DistributorAgent();
-			agentContainer.acceptNewAgent("Distributor", da).start();
+			dAgent = new DistributorAgent();
+			agentContainer.acceptNewAgent("Distributor", dAgent).start();
 			DefaultDrawableNode nodeDistr =
 					generateNode("Distributor", Color.RED,
 							random.nextInt(WIDTH/2),random.nextInt(HEIGHT/2));
 			nodes.add(nodeDistr);
-			da.setNode(nodeDistr);
-
+			dAgent.setNode(nodeDistr);
 			
 			//Create pickupLocations
 			Location l1 = new Location(SUPPLIER_LAT_1, SUPPLIER_LON_1);
@@ -171,6 +177,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 			pickupLocations.add(l1);
 			pickupLocations.add(l2);
 			pickupLocations.add(l3);
+
 			//Create supplier
 			SupplierAgent sa = new SupplierAgent(pickupLocations);
 			agentContainer.acceptNewAgent("Supplier", sa).start();
@@ -179,8 +186,12 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 							random.nextInt(WIDTH/2),random.nextInt(HEIGHT/2));
 			nodes.add(nodeSupplier);
 			sa.setNode(nodeSupplier);
-			
-			
+
+			DefaultDrawableEdge sampleEdge = new DefaultDrawableEdge(nodeDistr, nodeSupplier);
+			nodeDistr.addOutEdge(sampleEdge);
+			nodeSupplier.addInEdge(sampleEdge);
+
+			//Create pickupLocations
 			for(int i = 0; i < pickupLocations.size(); i++)
 			{
 				DefaultDrawableNode node =
@@ -283,7 +294,12 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		plot.display();
 
 		getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
-		getSchedule().scheduleActionAtInterval(100, plot, "step", Schedule.LAST);
+		getSchedule().scheduleActionAtInterval(100, this, "step", Schedule.INTERVAL_UPDATER);
+	}
+
+	public void step()
+	{
+		dAgent.nextPos();
 	}
 
 

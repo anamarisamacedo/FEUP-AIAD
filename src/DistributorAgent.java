@@ -2,21 +2,13 @@ import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import sajas.core.Agent;
 import sajas.proto.AchieveREInitiator;
 import sajas.proto.AchieveREResponder;
-import sajas.core.Agent;
-import sajas.core.behaviours.Behaviour;
-import sajas.core.behaviours.WakerBehaviour;
-import sajas.core.behaviours.WrapperBehaviour;
-import sajas.domain.DFService;
 import uchicago.src.sim.network.DefaultDrawableNode;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.Vector;
 
 
@@ -36,6 +28,7 @@ public class DistributorAgent extends Agent {
         HelperClass.registerAgent(this, "Distributor");
     }
 
+    //TODO: Receive argument to determine which algorithm to use for the allocation
     public DistributorAgent()
     {
 
@@ -43,6 +36,17 @@ public class DistributorAgent extends Agent {
 
     public void setNode(DefaultDrawableNode node) {
         this.myNode = node;
+    }
+
+    public DefaultDrawableNode getNode() {
+        return this.myNode;
+    }
+
+    //TODO: complete function to follow path created by the distributor
+    public void nextPos()
+    {
+        myNode.setX(myNode.getX() + 1);
+        myNode.setY(myNode.getY() + 1);
     }
 
     //Receives requests from the supplier

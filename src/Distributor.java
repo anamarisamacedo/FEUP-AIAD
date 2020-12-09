@@ -21,6 +21,7 @@ class Distributor {
 		return vehicle;
 	}
 
+	//TODO: Crate different algorithms to study their performance
 	public List<Pair<Order, Double>> allocate(ArrayList<Order> orders, Location source) {
 		List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
 
