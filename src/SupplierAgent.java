@@ -52,14 +52,10 @@ public class SupplierAgent extends Agent {
 		HelperClass.registerAgent(this, "Supplier");
 	}
 
-	public SupplierAgent()
-	{
-
-	}
-
-	public List<Location> getPickupLocations()
-	{
-		return supplier.getPickupLocations();
+	public SupplierAgent(List<Location> pickupList) {
+		for(Location l : pickupList) {
+			this.supplier.addPickupLocations(l);
+		}
 	}
 
 	public void setNode(DefaultDrawableNode node) {
@@ -146,6 +142,7 @@ public class SupplierAgent extends Agent {
 		}
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
+			System.out.println("Entrou");
 			// Get nearest pickup to the clients' orders locations at the end of the day
 			Location pickup = supplier.allocatePickUp(finalOrders);
 

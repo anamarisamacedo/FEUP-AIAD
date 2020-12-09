@@ -1,5 +1,0 @@
-Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 101 Lon: 784) to (Lat: 0 Lon: 560) in 1 place and took 1207,000000 time;
-Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 101 Lon: 784) to (Lat: 353 Lon: 441) in 2 place and took 3982,000000 time;
-Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 101 Lon: 784) to (Lat: 138 Lon: 173) in 3 place and took 6343,000000 time;
-Vehicle 0 (Truck,capacity: 2000) delivered from (Lat: 101 Lon: 784) to (Lat: 532 Lon: 963) in 4 place and took 21930,000000 time;
-Vehicle 0 (MailMan,capacity: 30) delivered from (Lat: 615 Lon: 846) to (Lat: 145 Lon: 427) in 1 place and took 49557,000000 time;
