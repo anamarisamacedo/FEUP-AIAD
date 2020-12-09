@@ -7,6 +7,7 @@ import sajas.proto.AchieveREInitiator;
 import sajas.proto.AchieveREResponder;
 import uchicago.src.sim.network.DefaultDrawableNode;
 
+import sajas.core.behaviours.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.Duration;
@@ -23,9 +24,11 @@ public class SupplierAgent extends Agent {
 	private Supplier supplier = new Supplier();
 	public LocalDateTime dayStart;
 	private DefaultDrawableNode myNode;
-
+	Behaviour loop;
+	
 	public void setup() {
 		supAgent = this;
+		
 		// Add behaviour to receive requests/orders from clients
 		addBehaviour(new FIPARequestClientResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
 		System.out.println("Supplier active!!");
@@ -52,18 +55,20 @@ public class SupplierAgent extends Agent {
 		protected ACLMessage handleRequest(ACLMessage request) {
 			ACLMessage reply = request.createReply();
 			
+			loop = new TickerBehaviour(supAgent, 300)
+			{
+				protected void onTick() {
+					finalOrders = orders;
+					orders = new ArrayList<Order>();
+					//a new behaviour is created to initiate a communication with the distributor
+					addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
+				}
+			};
 
 			try {
+				
 				// Get the order received from the client
 				Order order = (Order) (request.getContentObject());
-				//Start counting the day from the first received order
-				if(orderCount==0) {
-					dayStart = LocalDateTime.now();
-				}
-				orderCount++;
-				
-				LocalDateTime dayEnd = LocalDateTime.now();
-				Long duration = Duration.between(dayStart, dayEnd).getSeconds();
 				
 				ArrayList<Pair<Item, Integer>> itemsStock = HelperClass.getItemsAndStock("Products.txt");
 				// Check if the ordered items have stock
@@ -72,13 +77,7 @@ public class SupplierAgent extends Agent {
 						if (clientItem.equals(stockItem.getFirst())) {
 							if(stockItem.getSecond()==0) {	
 								// At the end of a day (10 second) the supplier calls the distributor to send the orders
-								if(duration >= 10) {
-									orderCount = 0;
-									finalOrders = orders;
-									orders = new ArrayList<Order>();
-									//a new behaviour is created to initiate a communication with the distributor
-									addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
-								}
+						
 								//If an item doesn't have stock, a REFUSE message is sent to the client
 								//and the process finishes 
 								reply.setPerformative(ACLMessage.REFUSE);
@@ -92,13 +91,9 @@ public class SupplierAgent extends Agent {
 				orders.add(order);
 				
 				// At the end of a day (10 second) the supplier calls the distributor to send the orders
-				if(duration >= 10) {	
-					orderCount = 0;
-					finalOrders = orders;
-					orders = new ArrayList<Order>();
-					//a new behaviour is created to initiate a communication with the distributor
-					addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
-				}
+					
+				addBehaviour(loop);
+				
 
 			} catch (UnreadableException e) {
 				e.printStackTrace();
