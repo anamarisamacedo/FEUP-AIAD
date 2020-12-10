@@ -160,7 +160,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		
 		try{
 			//Create Distributor
-			dAgent = new DistributorAgent(DistributorMethod.regular);
+			dAgent = new DistributorAgent(DistributorMethod.even);
 			dAgent.setLocation(new Location(300, 300));
 			agentContainer.acceptNewAgent("Distributor", dAgent).start();
 			DefaultDrawableNode nodeDistr =

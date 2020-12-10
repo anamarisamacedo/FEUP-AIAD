@@ -23,7 +23,29 @@ abstract class Vehicle {
     private int id;
     //current location
     protected Location location;
+    DefaultDrawableNode myNode;
 
+    public Vehicle() {
+        this.id = Vehicle.native_id++;
+        this.baseSpeed = 0;
+        this.location = new Location(300, 300);
+        this.myNode = new DefaultDrawableNode();
+    }
+
+    public int getRemainingSpace()
+    {
+        return this.capacity - this.getCapacityOccupied();
+    }
+
+    public int getCapacityOccupied()
+    {
+        int totalFilled = 0;
+        for(Order order : orders)
+        {
+            totalFilled += order.getWeight();
+        }
+        return totalFilled;
+    }
     public Queue<Location> getPath() {
         return path;
     }
@@ -39,15 +61,6 @@ abstract class Vehicle {
         this.myNode = myNode;
     }
 
-    DefaultDrawableNode myNode;
-
-
-    public Vehicle() {
-        this.id = Vehicle.native_id++;
-        this.baseSpeed = 0;
-        this.location = new Location(300, 300);
-        this.myNode = new DefaultDrawableNode();
-    }
 
     public int baseSpeed() {
         return this.baseSpeed;

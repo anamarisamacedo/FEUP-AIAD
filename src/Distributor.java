@@ -8,18 +8,18 @@ class Distributor {
 	private DistributorMethod method;
 
 	public Distributor() {
-		generateVehicles(100);
+		generateVehicles(10);
 		this.method = DistributorMethod.regular;
 	}
 
 	public Distributor(Location location) {
-		generateVehicles(100);
+		generateVehicles(10);
 		this.location = location;
 		this.method = DistributorMethod.regular;
 	}
 
 	public Distributor(Location location, DistributorMethod method) {
-		generateVehicles(100);
+		generateVehicles(10);
 		this.location = location;
 		this.method = method;
 	}
@@ -55,10 +55,25 @@ class Distributor {
 		this.fleet = vehicles;
 	}
 
-	//TODO: Crate different algorithms to study their performance
 	public List<Pair<Order, Double>> allocate(ArrayList<Order> orders, Location source) {
-		List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
+		if(this.method == DistributorMethod.even)
+		{
+			return allocateEven(orders,source);
+		}
+		else if(this.method == DistributorMethod.random)
+		{
+			return allocateRandom(orders,source);
+		}
+		else if(this.method == DistributorMethod.regular)
+		{
+			return allocateRegular(orders,source);
+		}
+		return null;
+	}
 
+	public List<Pair<Order, Double>> allocateRegular(ArrayList<Order> orders, Location source) {
+
+		List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
 
 		int size = orders.size();
 		while (size > 0) {
@@ -83,8 +98,7 @@ class Distributor {
 		}
 
 		for (int i = 0; i < this.fleet.size(); i++) {
-			if(this.getFleet().get(i).getOrders().size() > 0)
-			{
+			if (this.getFleet().get(i).getOrders().size() > 0) {
 				time_per_order.addAll(this.path(this.fleet.get(i), source));
 			}
 		}
@@ -92,10 +106,58 @@ class Distributor {
 		return time_per_order;
 	}
 
+	public List<Pair<Order, Double>> allocateRandom(ArrayList<Order> orders, Location source) {
+
+		List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
+		Random random = new Random(System.currentTimeMillis());
+
+		ListIterator<Order> iter = orders.listIterator();
+
+		while (iter.hasNext()) {
+			Vehicle vehicle = this.fleet.get(random.nextInt(this.fleet.size()));
+			vehicle.addOrder(iter.next());
+		}
+
+		for (int i = 0; i < this.fleet.size(); i++) {
+			if (this.getFleet().get(i).getOrders().size() > 0) {
+				time_per_order.addAll(this.path(this.fleet.get(i), source));
+			}
+		}
+
+		return time_per_order;
+	}
+
+	public List<Pair<Order, Double>> allocateEven(ArrayList<Order> orders, Location source) {
+		List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
+		Random random = new Random(System.currentTimeMillis());
+
+		Vehicle vehicle = this.fleet.get(random.nextInt(this.fleet.size()));
+		ListIterator<Order> iter = orders.listIterator();
+		//capacity occupied by the current vehicle with less occupation
+		int leastFull = 0;
+		//iterate through every order
+		while (iter.hasNext()) {
+			//get least full vehicle
+			for (Vehicle candidateVehicle : this.fleet) {
+				if (candidateVehicle.getCapacityOccupied() < vehicle.getCapacityOccupied()) {
+					vehicle = candidateVehicle;
+				}
+			}
+			vehicle.addOrder(iter.next());
+		}
+
+		for (int i = 0; i < this.fleet.size(); i++) {
+			if (this.getFleet().get(i).getOrders().size() > 0) {
+				time_per_order.addAll(this.path(this.fleet.get(i), source));
+			}
+		}
+
+		return time_per_order;
+	}
 
 	public boolean finalized(boolean[] visited) {
 		for (int i = 0; i < visited.length; i++) {
-			if (visited[i] != true)
+			if (!visited[i])
 				return false;
 		}
 
@@ -152,7 +214,7 @@ class Distributor {
 			double distTo = Integer.MAX_VALUE;
 			Location temp = null;
 			for (; i < locations.size(); i++) {
-				if (currLoc.distanceTo(locations.get(i)) < distTo && visited[i] == false
+				if (currLoc.distanceTo(locations.get(i)) < distTo && !visited[i]
 						&& !currLoc.equals(locations.get(i))) {
 					distTo = currLoc.distanceTo(locations.get(i));
 					temp = locations.get(i);
