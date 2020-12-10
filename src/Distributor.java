@@ -5,21 +5,33 @@ class Distributor {
 
 	private List<Vehicle> fleet = new ArrayList<Vehicle>();
 	private Location location;
+	private DistributorMethod method;
 
 	public Distributor() {
 		generateVehicles(100);
+		this.method = DistributorMethod.regular;
 	}
 
 	public Distributor(Location location) {
 		generateVehicles(100);
 		this.location = location;
+		this.method = DistributorMethod.regular;
+	}
+
+	public Distributor(Location location, DistributorMethod method) {
+		generateVehicles(100);
+		this.location = location;
+		this.method = method;
 	}
 
 	public void moveVehicles()
 	{
 		for(Vehicle v : fleet)
 		{
-			v.moveVehicle();
+			if(!v.getPath().isEmpty())
+			{
+				v.moveVehicle();
+			}
 		}
 	}
 

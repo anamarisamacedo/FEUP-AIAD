@@ -9,7 +9,6 @@ import sajas.proto.AchieveREInitiator;
 import sajas.proto.AchieveREResponder;
 import uchicago.src.sim.network.DefaultDrawableNode;
 
-import sajas.core.behaviours.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -25,6 +24,7 @@ public class SupplierAgent extends Agent {
 	private Supplier supplier = new Supplier();
 	public LocalDateTime dayStart;
 	private DefaultDrawableNode myNode;
+
 	Behaviour loop;
 	
 	public void setup() {
@@ -63,7 +63,6 @@ public class SupplierAgent extends Agent {
 					//a new behaviour is created to initiate a communication with the distributor
 					if(!finalOrders.isEmpty())
 					{
-						System.out.println("Sending: " + finalOrders.size());
 						addBehaviour(new FIPARequestDistributorInit(supAgent, new ACLMessage(ACLMessage.REQUEST)));
 					}
 				}
@@ -81,7 +80,7 @@ public class SupplierAgent extends Agent {
 						if (clientItem.equals(stockItem.getFirst())) {
 							if(stockItem.getSecond()==0) {	
 								// At the end of a day (10 second) the supplier calls the distributor to send the orders
-						
+								addBehaviour(loop);
 								//If an item doesn't have stock, a REFUSE message is sent to the client
 								//and the process finishes 
 								reply.setPerformative(ACLMessage.REFUSE);
@@ -121,7 +120,6 @@ public class SupplierAgent extends Agent {
 		}
 
 		protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
-			System.out.println("Entrou");
 			// Get nearest pickup to the clients' orders locations at the end of the day
 			Location pickup = supplier.allocatePickUp(finalOrders);
 

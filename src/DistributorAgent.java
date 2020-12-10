@@ -19,7 +19,7 @@ public class DistributorAgent extends Agent {
 	
 	public List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
     private DistributorAgent distAgent;
-    private Distributor distributor = new Distributor();
+    private Distributor distributor;
     private DefaultDrawableNode myNode;
     private Location location;
 
@@ -37,13 +37,13 @@ public class DistributorAgent extends Agent {
         addBehaviour(new FIPARequestResp(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
         System.out.println("Distributor active!!");
         HelperClass.registerAgent(this, "Distributor");
-        this.location = new Location(100, 100);
     }
 
     //TODO: Receive argument to determine which algorithm to use for the allocation
-    public DistributorAgent()
+    public DistributorAgent(DistributorMethod method)
     {
-        this.location = new Location(100, 100);
+        this.location = new Location(300, 300);
+        this.distributor = new Distributor(new Location(300, 300), method);
     }
 
     public List<Vehicle> getFleet()
@@ -88,11 +88,6 @@ public class DistributorAgent extends Agent {
                 ArrayList<Order> orders = requestMessage.getFirst();
                 
                 Location pickup = requestMessage.getSecond();
-                
-                System.out.println("Got the orders, here is the first's date: " + orders.get(0).getDate());
-                System.out.println("Got the pickup location: " + requestMessage.getSecond().getLat() + ", " + requestMessage.getSecond().getLon());
-
-                distributor = new Distributor(new Location(0,0));
 
                 time_per_order = distributor.allocate(orders, pickup);
                 

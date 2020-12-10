@@ -148,8 +148,6 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	}
 
 
-	//TODO: Add distributor and supplier's correct coords
-	//TODO: Add edge to link distributor and the agent he's moving towards.
 	//TODO: Fix the labels on each agent
 	//TODO: Ask professor for ways to make the simulation look better
 	private int clientCount = 0;
@@ -162,7 +160,8 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		
 		try{
 			//Create Distributor
-			dAgent = new DistributorAgent();
+			dAgent = new DistributorAgent(DistributorMethod.regular);
+			dAgent.setLocation(new Location(300, 300));
 			agentContainer.acceptNewAgent("Distributor", dAgent).start();
 			DefaultDrawableNode nodeDistr =
 					generateNode("Distributor", Color.RED,
@@ -187,10 +186,6 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 			nodes.add(nodeSupplier);
 			sAgent.setNode(nodeSupplier);
 
-			//Sample edge
-			DefaultDrawableEdge sampleEdge = new DefaultDrawableEdge(nodeDistr, nodeSupplier);
-			nodeDistr.addOutEdge(sampleEdge);
-			nodeSupplier.addInEdge(sampleEdge);
 
 			//Create pickupLocations
 			for(int i = 0; i < pickupLocations.size(); i++)
@@ -211,6 +206,11 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 				DefaultDrawableNode node = generateNode("Vehicle" + i, Color.GRAY, dAgent.getLocation().getLat(), dAgent.getLocation().getLon());
 				nodes.add(node);
 				dAgent.getFleet().get(i).setNode(node);
+
+				//Sample edge
+				DefaultDrawableEdge edge = new DefaultDrawableEdge(node, nodeDistr);
+				node.addOutEdge(edge);
+				nodeDistr.addInEdge(edge);
 			}
 
 		}catch (StaleProxyException e) {
@@ -218,11 +218,9 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		}
 	}
 
-	//TODO: make this function deschedule the actionAtInterval which calls it, otherwise it runs infinetely
 	public void generateClients() {
 		//Create Clients
 		clientCount++;
-		System.out.println("Current client count is: " + clientCount);
 		ClientAgent ca = new ClientAgent();
 		try {
 			agentContainer.acceptNewAgent("Client" + clientCount, ca).start();
@@ -303,13 +301,26 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		
 		plot.display();
 		getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
-		getSchedule().scheduleActionAtInterval(100, this, "step", Schedule.INTERVAL_UPDATER);
+		getSchedule().scheduleActionAtInterval(10, this, "step", Schedule.INTERVAL_UPDATER);
 	}
 
 	public void step()
 	{
-		dAgent.nextPos();
+		//dAgent.nextPos();
 		dAgent.moveVehicles();
+	}
+
+
+	public static DefaultDrawableNode getNodeAt(Location location)
+	{
+		for(DefaultDrawableNode node : nodes)
+		{
+			if(node.getX() == location.getLat() && node.getY() == location.getLon())
+			{
+				return node;
+			}
+		}
+		return null;
 	}
 
 

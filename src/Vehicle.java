@@ -1,3 +1,4 @@
+import uchicago.src.sim.network.DefaultDrawableEdge;
 import uchicago.src.sim.network.DefaultDrawableNode;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ abstract class Vehicle {
     public Vehicle() {
         this.id = Vehicle.native_id++;
         this.baseSpeed = 0;
-        this.location = new Location(0, 0);
+        this.location = new Location(300, 300);
         this.myNode = new DefaultDrawableNode();
     }
 
@@ -97,15 +98,10 @@ abstract class Vehicle {
 
     public void moveVehicle()
     {
-        System.out.println("My lat is: " + this.getLocation().getLat());
-        System.out.println("My lon is: " + this.getLocation().getLon());
         if(this.path.isEmpty())
         {
-            System.out.println("It's empty");
             return;
         }
-
-        System.out.println("GONNA UPDATE POS");
 
         Location nextLocation = this.getNextStop();
         if(location.equals(this.getNextStop()))
@@ -116,12 +112,17 @@ abstract class Vehicle {
             {
                 return;
             }
+
+            DefaultDrawableEdge edge = (DefaultDrawableEdge) this.myNode.getOutEdges().get(0);
+            edge.setTo(Repast3ServiceLauncher.getNodeAt(this.getNextStop()));
+
         }
 
-        int xIncrement = 0;
-        int yIncrement = 0;
+        double xIncrement = 0;
+        double yIncrement = 0;
+        double velocity = this.baseSpeed*0.2;
 
-        if(abs(nextLocation.getLat() - this.getLocation().getLat()) < this.baseSpeed)
+        if(abs(nextLocation.getLat() - this.getLocation().getLat()) < velocity)
         {
             xIncrement = nextLocation.getLat() - this.getLocation().getLat();
         }
@@ -129,15 +130,15 @@ abstract class Vehicle {
         {
             if(nextLocation.getLat() < this.location.getLat())
             {
-                xIncrement = -1*this.baseSpeed;
+                xIncrement = -1*velocity;
             }
             else
             {
-                xIncrement = this.baseSpeed;
+                xIncrement = velocity;
             }
         }
 
-        if(abs(nextLocation.getLon() - this.getLocation().getLon()) < this.baseSpeed)
+        if(abs(nextLocation.getLon() - this.getLocation().getLon()) < velocity)
         {
             yIncrement = nextLocation.getLon() - this.getLocation().getLon();
         }
@@ -145,16 +146,14 @@ abstract class Vehicle {
         {
             if(nextLocation.getLon() < this.location.getLon())
             {
-                yIncrement = -1*this.baseSpeed;
+                yIncrement = -1*velocity;
             }
             else
             {
-                yIncrement = this.baseSpeed;
+                yIncrement = velocity;
             }
         }
-        this.setLocation(new Location(this.location.getLat()+xIncrement, this.location.getLat()+yIncrement));
-        System.out.println("My next lat is: " + this.getLocation().getLat());
-        System.out.println("My next lon is: " + this.getLocation().getLon());
+        this.setLocation(new Location((int)(this.location.getLat()+xIncrement), (int)(this.location.getLon()+yIncrement)));
     }
 
 }
