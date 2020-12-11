@@ -4,6 +4,7 @@ import jade.wrapper.StaleProxyException;
 import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
+import uchicago.src.reflector.ListPropertyDescriptor;
 import uchicago.src.reflector.RangePropertyDescriptor;
 import uchicago.src.sim.analysis.OpenSequenceGraph;
 import uchicago.src.sim.analysis.Sequence;
@@ -17,8 +18,10 @@ import uchicago.src.sim.network.DefaultDrawableNode;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
+import java.util.Vector;
 
 public class Repast3ServiceLauncher extends Repast3Launcher {
 
@@ -31,6 +34,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	private int SUPPLIER_LON_2 = 500;
 	private int SUPPLIER_LAT_3 = 500;
 	private int SUPPLIER_LON_3 = 500;
+	private DistributorMethod ALLOCATION = DistributorMethod.regular;
 
 	private Repast3ServiceLauncher repastLauncher = this;
 
@@ -117,12 +121,18 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		this.SUPPLIER_LON_3 = SUPPLIER_LON_3;
 	}
 	
-	
+	public DistributorMethod getALLOCATION() {
+		return ALLOCATION;
+	}
+
+	public void setALLOCATION(DistributorMethod ALLOCATION) {
+		this.ALLOCATION = ALLOCATION;
+	}
 	
 
 	@Override
 	public String[] getInitParam() {
-		return new String[] {"N_CLIENTS", "SUPPLIER_LAT_1", "SUPPLIER_LON_1", "SUPPLIER_LAT_2", "SUPPLIER_LON_2", "SUPPLIER_LAT_3", "SUPPLIER_LON_3" };
+		return new String[] {"N_CLIENTS", "SUPPLIER_LAT_1", "SUPPLIER_LON_1", "SUPPLIER_LAT_2", "SUPPLIER_LON_2", "SUPPLIER_LAT_3", "SUPPLIER_LON_3", "ALLOCATION" };
 	}
 
 	@Override
@@ -160,7 +170,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		
 		try{
 			//Create Distributor
-			dAgent = new DistributorAgent(DistributorMethod.even);
+			dAgent = new DistributorAgent(ALLOCATION);
 			dAgent.setLocation(new Location(300, 300));
 			agentContainer.acceptNewAgent("Distributor", dAgent).start();
 			DefaultDrawableNode nodeDistr =
@@ -257,6 +267,13 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		descriptors.put("SUPPLIER_LON_2", new RangePropertyDescriptor("SUPPLIER_LON_2", 0, 1000, 200));
 		descriptors.put("SUPPLIER_LAT_3", new RangePropertyDescriptor("SUPPLIER_LAT_3", 0, 1000, 200));
 		descriptors.put("SUPPLIER_LON_3", new RangePropertyDescriptor("SUPPLIER_LON_3", 0, 1000, 200));
+		Vector v = new Vector();
+		v.add(DistributorMethod.regular);
+		v.add(DistributorMethod.even);
+		v.add(DistributorMethod.random);
+		descriptors.put("ALLOCATION", new ListPropertyDescriptor("ALLOCATION", v));
+
+		
 	}
 
 
