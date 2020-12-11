@@ -141,14 +141,14 @@ class Distributor {
 
 	public List<Pair<Order, Double>> allocateEven(ArrayList<Order> orders, Location source) {
 		List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
-		int leastOccupied = Integer.MAX_VALUE;
 		ListIterator<Order> iter = orders.listIterator();
 		//iterate through every order
 		while (iter.hasNext()) {
+			int leastOccupied = Integer.MAX_VALUE;
 			Order order = iter.next();
 			//get least full vehicle
 			for (Vehicle candidateVehicle : this.fleet) {
-				if (candidateVehicle.getCapacityOccupied() < leastOccupied && candidateVehicle.canPlace(order)) {
+				if ((candidateVehicle.getCapacityOccupied() < leastOccupied) && candidateVehicle.canPlace(order)) {
 					candidateVehicle.addOrder(order);
 					leastOccupied = candidateVehicle.getCapacityOccupied();
 				}
@@ -168,14 +168,14 @@ class Distributor {
 	{
 		List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
 
-		double bestCost = Double.MAX_VALUE;
 		ListIterator<Order> iter = orders.listIterator();
 		//iterate through every order
 		while (iter.hasNext()) {
+			double bestCost = Double.MAX_VALUE;
 			Order order = iter.next();
 			//get least costly vehicle
 			for (Vehicle candidateVehicle : this.fleet) {
-				if (candidateVehicle.getCost() < bestCost && candidateVehicle.canPlace(order)) {
+				if ((candidateVehicle.getCost() < bestCost) && candidateVehicle.canPlace(order)) {
 					candidateVehicle.addOrder(order);
 					bestCost = candidateVehicle.getCost();
 				}
