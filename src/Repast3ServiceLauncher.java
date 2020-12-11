@@ -1,11 +1,15 @@
+import jade.core.AID;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
+import jade.lang.acl.ACLMessage;
 import jade.wrapper.StaleProxyException;
 import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
 import uchicago.src.reflector.ListPropertyDescriptor;
 import uchicago.src.reflector.RangePropertyDescriptor;
+import uchicago.src.sim.analysis.BinDataSource;
+import uchicago.src.sim.analysis.OpenHistogram;
 import uchicago.src.sim.analysis.OpenSequenceGraph;
 import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.Schedule;
@@ -287,7 +291,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 
 	private DisplaySurface dsurf;
 	private int WIDTH = 1200, HEIGHT = 1200;
-	private OpenSequenceGraph plot;
+	private OpenHistogram hist;
 
 	private void buildAndScheduleDisplay() {
 		// display surface
@@ -301,22 +305,19 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		dsurf.display();
 
 		// graph
-		if (plot != null) plot.dispose();
-		plot = new OpenSequenceGraph("Service performance", this);
-		plot.setAxisTitles("time", "% successful service executions");
+		if (hist != null) hist.dispose();
+		hist = new OpenHistogram("Distributor Allocation", N_CLIENTS, 0);
+		hist.setYRange(0, 30000);
+		BinDataSource source = new BinDataSource()  {
+		  public double getBinValue(Object o) {
+		    DistributorAgent agent = (DistributorAgent)o;
+		    return agent.getTimeRegular();
+		  }
+		};
 
-		plot.addSequence("Distributor", new Sequence() {
-			public double getSValue() {
-			/*	// iterate through consumers
-				double v = 0.0;
-				for(int i = 0; i < consumers.size(); i++) {
-					v += consumers.get(i).getMovingAverage(10);
-				}*/
-				return 1;
-			}
-		});
+		hist.createHistogramItem("Wealth", clients, source);
+		hist.display();
 		
-		plot.display();
 		getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
 		getSchedule().scheduleActionAtInterval(10, this, "step", Schedule.INTERVAL_UPDATER);
 	}

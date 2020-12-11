@@ -22,6 +22,8 @@ public class DistributorAgent extends Agent {
     private Distributor distributor;
     private DefaultDrawableNode myNode;
     private Location location;
+    private ArrayList<Order> orders;
+    private Location pickup;
 
     public Location getLocation() {
         return location;
@@ -73,6 +75,25 @@ public class DistributorAgent extends Agent {
         myNode.setX(myNode.getX() + 1);
         myNode.setY(myNode.getY() + 1);
     }
+    
+    public double getTimeRegular(){
+    	List<Pair<Order, Double>> time_per_order = distributor.allocateRegular(orders, pickup);
+    	int size = time_per_order.size();
+    	System.out.println(time_per_order.get(size-1).getFirst());
+    	return time_per_order.get(size-1).getSecond();
+    }
+    
+    public double getTimeRandom(){
+    	List<Pair<Order, Double>> time_per_order = distributor.allocateRandom(orders, pickup);
+    	int size = time_per_order.size();
+    	return time_per_order.get(size-1).getSecond();
+    }
+    
+    public double getTimeEven(){
+    	List<Pair<Order, Double>> time_per_order = distributor.allocateEven(orders, pickup);
+    	int size = time_per_order.size();
+    	return time_per_order.get(size-1).getSecond();
+    }
 
     //Receives requests from the supplier
     class FIPARequestResp extends AchieveREResponder {
@@ -85,9 +106,8 @@ public class DistributorAgent extends Agent {
             try {
             	//Get the content (pair with the orders array and the pickup location) of the received message
                 Pair<ArrayList<Order>, Location> requestMessage = (Pair<ArrayList<Order>, Location>)(request.getContentObject());
-                ArrayList<Order> orders = requestMessage.getFirst();
-                
-                Location pickup = requestMessage.getSecond();
+                orders = requestMessage.getFirst();
+                pickup = requestMessage.getSecond();
 
                 time_per_order = distributor.allocate(orders, pickup);
                 
