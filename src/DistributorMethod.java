@@ -1,5 +1,5 @@
 public enum DistributorMethod {
-    regular, random, even
+    regular, random, even, reduceCost
 }
 
 /*
@@ -7,4 +7,5 @@ public enum DistributorMethod {
 * regular - first method developed
 * random - assign each order to a random vehicle
 * even - even out the nr of orders in each vehicle
+* reduceCost - get minimum cost of total trips possible
 * */

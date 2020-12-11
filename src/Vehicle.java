@@ -126,6 +126,16 @@ abstract class Vehicle {
         return this.totalTripCost;
     }
 
+    public double getCost()
+    {
+        return this.cost;
+    }
+
+    public boolean canPlace(Order order)
+    {
+        return this.getCapacityOccupied() + order.getWeight() <= this.capacity;
+    }
+
     public void moveVehicle()
     {
         if(this.path.isEmpty())
