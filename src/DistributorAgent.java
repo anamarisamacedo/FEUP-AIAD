@@ -58,6 +58,11 @@ public class DistributorAgent extends Agent {
         }
     }
 
+    public double getTotalTripsCost()
+    {
+        return distributor.getTotalTripsCost();
+    }
+
     public void setNode(DefaultDrawableNode node) {
         this.myNode = node;
     }
@@ -83,7 +88,7 @@ public class DistributorAgent extends Agent {
 
                 time_per_order = distributor.allocate(orders, pickup);
                 
-                addBehaviour( new FIPARequestClientInit(distAgent, new ACLMessage(ACLMessage.REQUEST)));
+                addBehaviour(new FIPARequestClientInit(distAgent, new ACLMessage(ACLMessage.REQUEST)));
 
             } catch (UnreadableException e) {
                 e.printStackTrace();

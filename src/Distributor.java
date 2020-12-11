@@ -252,4 +252,14 @@ class Distributor {
 	{
 		return this.fleet;
 	}
+
+	public double getTotalTripsCost()
+	{
+		double total = 0.0;
+		for(Vehicle v : this.fleet)
+		{
+			total+=v.getTotalTripCost();
+		}
+		return total;
+	}
 }

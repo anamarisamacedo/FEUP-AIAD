@@ -271,8 +271,6 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		v.add(DistributorMethod.even);
 		v.add(DistributorMethod.random);
 		descriptors.put("ALLOCATION", new ListPropertyDescriptor("ALLOCATION", v));
-
-		
 	}
 
 
