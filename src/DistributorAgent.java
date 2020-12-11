@@ -39,7 +39,6 @@ public class DistributorAgent extends Agent {
         HelperClass.registerAgent(this, "Distributor");
     }
 
-    //TODO: Receive argument to determine which algorithm to use for the allocation
     public DistributorAgent(DistributorMethod method, int nrClients)
     {
         this.location = new Location(300, 300);
@@ -65,13 +64,6 @@ public class DistributorAgent extends Agent {
 
     public DefaultDrawableNode getNode() {
         return this.myNode;
-    }
-
-    //TODO: delete this
-    public void nextPos()
-    {
-        myNode.setX(myNode.getX() + 1);
-        myNode.setY(myNode.getY() + 1);
     }
 
     //Receives requests from the supplier

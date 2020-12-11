@@ -174,6 +174,8 @@ class Distributor {
 
 		//First location of the vehicle is the distributor's location
 		v.addLocationToPath(this.location);
+		//Second location of the vehicle is the pickupLocation
+		v.addLocationToPath(source);
 
 		// get all delivery locations
 		List<Location> locations = new ArrayList<Location>();

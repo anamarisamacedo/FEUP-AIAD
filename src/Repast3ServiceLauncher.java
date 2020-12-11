@@ -322,7 +322,6 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 
 	public void step()
 	{
-		//dAgent.nextPos();
 		dAgent.moveVehicles();
 	}
 
