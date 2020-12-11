@@ -18,7 +18,6 @@ import uchicago.src.sim.network.DefaultDrawableNode;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
@@ -170,7 +169,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		
 		try{
 			//Create Distributor
-			dAgent = new DistributorAgent(ALLOCATION);
+			dAgent = new DistributorAgent(ALLOCATION, N_CLIENTS);
 			dAgent.setLocation(new Location(300, 300));
 			agentContainer.acceptNewAgent("Distributor", dAgent).start();
 			DefaultDrawableNode nodeDistr =
@@ -260,7 +259,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	public void setup() {
 		super.setup();
 
-		descriptors.put("N_CLIENTS", new RangePropertyDescriptor("N_CLIENTS", 5, 15, 2));
+		descriptors.put("N_CLIENTS", new RangePropertyDescriptor("N_CLIENTS", 5, 150, 2));
 		descriptors.put("SUPPLIER_LAT_1", new RangePropertyDescriptor("SUPPLIER_LAT_1", 0, 1000, 200));
 		descriptors.put("SUPPLIER_LON_1", new RangePropertyDescriptor("SUPPLIER_LON_1", 0, 1000, 200));
 		descriptors.put("SUPPLIER_LAT_2", new RangePropertyDescriptor("SUPPLIER_LAT_2", 0, 1000, 200));

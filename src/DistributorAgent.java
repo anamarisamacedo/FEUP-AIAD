@@ -40,10 +40,10 @@ public class DistributorAgent extends Agent {
     }
 
     //TODO: Receive argument to determine which algorithm to use for the allocation
-    public DistributorAgent(DistributorMethod method)
+    public DistributorAgent(DistributorMethod method, int nrClients)
     {
         this.location = new Location(300, 300);
-        this.distributor = new Distributor(new Location(300, 300), method);
+        this.distributor = new Distributor(new Location(300, 300), method, nrClients);
     }
 
     public List<Vehicle> getFleet()

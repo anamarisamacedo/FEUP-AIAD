@@ -8,18 +8,18 @@ class Distributor {
 	private DistributorMethod method;
 
 	public Distributor() {
-		generateVehicles(10);
+		generateVehicles(100);
 		this.method = DistributorMethod.regular;
 	}
 
 	public Distributor(Location location) {
-		generateVehicles(10);
+		generateVehicles(100);
 		this.location = location;
 		this.method = DistributorMethod.regular;
 	}
 
-	public Distributor(Location location, DistributorMethod method) {
-		generateVehicles(10);
+	public Distributor(Location location, DistributorMethod method, int nrClients) {
+		generateVehicles(nrClients);
 		this.location = location;
 		this.method = method;
 	}
