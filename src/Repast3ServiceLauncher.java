@@ -288,6 +288,8 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	private DisplaySurface dsurf;
 	private int WIDTH = 1200, HEIGHT = 1200;
 	private OpenSequenceGraph plot;
+	private OpenSequenceGraph plot2;
+	
 
 	private void buildAndScheduleDisplay() {
 		// display surface
@@ -308,62 +310,88 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		plot.setYRange(0, 1000);
 		plot.setAxisTitles("time", "Total delivery time");
 
-//		plot.addSequence("Regular", new Sequence() {
-//			public double getSValue() {
-//				double maxTime=Double.MIN_VALUE;
-//				List<Pair<Order, Double>> timeRegular = dAgent.getTimeRegular();
-//				for(int i = 0; i < timeRegular.size(); i++) {
-//					if(timeRegular.get(i).getSecond() > maxTime) {
-//						maxTime= timeRegular.get(i).getSecond();
-//					}
-//				}
-//				System.out.println("REGULAR "+ maxTime);
-//				return maxTime;
-//			  }
-//		});
-//		plot.addSequence("Even", new Sequence() {
-//			public double getSValue() {
-//				double maxTime=Double.MIN_VALUE;
-//				List<Pair<Order, Double>> timeEven = dAgent.getTimeEven();
-//				for(int i = 0; i < timeEven.size(); i++) {
-//					if(timeEven.get(i).getSecond() > maxTime) {
-//						maxTime = timeEven.get(i).getSecond();
-//					}
-//				}
-//				System.out.println("EVEN "+ maxTime);
-//				return maxTime;
-//			  }
-//		});
-//		plot.addSequence("Random", new Sequence() {
-//			public double getSValue() {
-//				double maxTimeRan=Double.MIN_VALUE;
-//				List<Pair<Order, Double>> timeRandom = dAgent.getTimeRandom();
-//				for(int i = 0; i < timeRandom.size(); i++) {
-//					if(timeRandom.get(i).getSecond() > maxTimeRan) {
-//						maxTimeRan = timeRandom.get(i).getSecond();
-//					}
-//				}
-//				System.out.println("RANDOM "+ maxTimeRan);
-//				return maxTimeRan;
-//			  }
-//		});
-//		plot.addSequence("Reduce Cost", new Sequence() {
-//			public double getSValue() {
-//				double maxTimeRC=Double.MIN_VALUE;
-//				List<Pair<Order, Double>> timeReduceCost = dAgent.getTimeReduceCost();
-//				for(int i = 0; i < timeReduceCost.size(); i++) {
-//					if(timeReduceCost.get(i).getSecond() > maxTimeRC) {
-//						maxTimeRC = timeReduceCost.get(i).getSecond();
-//					}
-//				}
-//				System.out.println("REDUCE "+ maxTimeRC);
-//				return maxTimeRC;
-//			  }
-//		});
+		plot.addSequence("Regular", new Sequence() {
+			public double getSValue() {
+				double maxTime=Double.MIN_VALUE;
+				List<Pair<Order, Double>> timeRegular = dAgent.getTimeRegular();
+				for(int i = 0; i < timeRegular.size(); i++) {
+					if(timeRegular.get(i).getSecond() > maxTime) {
+						maxTime= timeRegular.get(i).getSecond();
+					}
+				}
+				return maxTime;
+			  }
+		});
+		plot.addSequence("Even", new Sequence() {
+			public double getSValue() {
+				double maxTime=Double.MIN_VALUE;
+				List<Pair<Order, Double>> timeEven = dAgent.getTimeEven();
+				for(int i = 0; i < timeEven.size(); i++) {
+					if(timeEven.get(i).getSecond() > maxTime) {
+						maxTime = timeEven.get(i).getSecond();
+					}
+				}
+				return maxTime;
+			  }
+		});
+		plot.addSequence("Random", new Sequence() {
+			public double getSValue() {
+				double maxTimeRan=Double.MIN_VALUE;
+				List<Pair<Order, Double>> timeRandom = dAgent.getTimeRandom();
+				for(int i = 0; i < timeRandom.size(); i++) {
+					if(timeRandom.get(i).getSecond() > maxTimeRan) {
+						maxTimeRan = timeRandom.get(i).getSecond();
+					}
+				}
+				return maxTimeRan;
+			  }
+		});
+		plot.addSequence("Reduce Cost", new Sequence() {
+			public double getSValue() {
+				double maxTimeRC=Double.MIN_VALUE;
+				List<Pair<Order, Double>> timeReduceCost = dAgent.getTimeReduceCost();
+				for(int i = 0; i < timeReduceCost.size(); i++) {
+					if(timeReduceCost.get(i).getSecond() > maxTimeRC) {
+						maxTimeRC = timeReduceCost.get(i).getSecond();
+					}
+				}
+				return maxTimeRC;
+			  }
+		});
 		plot.display();
 		
+		if (plot2 != null) plot2.dispose();
+		plot2 = new OpenSequenceGraph("Cost", this);
+
+		plot2.setXRange(0, 1000);
+		plot2.setYRange(0, 1000);
+		plot2.setAxisTitles("time", "Total delivery time");
+
+		plot2.addSequence("Regular", new Sequence() {
+			public double getSValue() {
+				return dAgent.getCostRegular();
+			  }
+		});
+		plot2.addSequence("Random", new Sequence() {
+			public double getSValue() {
+				return dAgent.getCostRandom();
+			  }
+		});
+		plot2.addSequence("Even", new Sequence() {
+			public double getSValue() {
+				return dAgent.getCostEven();
+			  }
+		});
+		plot2.addSequence("Reduce Cost", new Sequence() {
+			public double getSValue() {
+				return dAgent.getCostReduceCost();
+			  }
+		});
+
+		plot2.display();
 		getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
 		getSchedule().scheduleActionAtInterval(500, plot, "step", Schedule.LAST);
+		getSchedule().scheduleActionAtInterval(500, plot2, "step", Schedule.LAST);
 		getSchedule().scheduleActionAtInterval(10, this, "step", Schedule.INTERVAL_UPDATER);
 	}
 
