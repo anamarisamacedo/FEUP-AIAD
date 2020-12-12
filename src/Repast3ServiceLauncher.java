@@ -7,6 +7,7 @@ import sajas.wrapper.ContainerController;
 import uchicago.src.reflector.ListPropertyDescriptor;
 import uchicago.src.reflector.RangePropertyDescriptor;
 import uchicago.src.sim.analysis.OpenSequenceGraph;
+import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
@@ -36,15 +37,12 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	private int SUPPLIER_LON_3 = 500;
 	private DistributorMethod ALLOCATION = DistributorMethod.regular;
 
-	private Repast3ServiceLauncher repastLauncher = this;
-
 	private DistributorAgent dAgent;
 	
 	public static final boolean SEPARATE_CONTAINERS = false;
 	private ContainerController mainContainer;
 	private ContainerController agentContainer;
 	private List<ClientAgent> clients;
-	private List<DistributorAgent> distributors;
 	private List<Location> pickupLocations;
 	private boolean fleetReady;
 
@@ -214,7 +212,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 			//Create vehicles nodes
 			for(int i = 0; i < dAgent.getFleet().size(); i++)
 			{
-				DefaultDrawableNode node = generateNode("Vehicle" + i, Color.GRAY, dAgent.getLocation().getLat(), dAgent.getLocation().getLon());
+				DefaultDrawableNode node = generateNode("Vehicle" + i, dAgent.getFleet().get(i).getColor(), dAgent.getLocation().getLat(), dAgent.getLocation().getLon());
 				nodes.add(node);
 				dAgent.getFleet().get(i).setNode(node);
 

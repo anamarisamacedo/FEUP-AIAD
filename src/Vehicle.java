@@ -1,6 +1,7 @@
 import uchicago.src.sim.network.DefaultDrawableEdge;
 import uchicago.src.sim.network.DefaultDrawableNode;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +28,8 @@ abstract class Vehicle {
     protected double cost;
     //total cost of trip scheduled
     protected double totalTripCost;
+
+    protected Color color;
     DefaultDrawableNode myNode;
 
     public Vehicle() {
@@ -90,6 +93,10 @@ abstract class Vehicle {
 		orders.add(order);
 	}
 
+	public Color getColor()
+    {
+        return this.color;
+    }
 	public Location getLocation()
     {
         return this.location;

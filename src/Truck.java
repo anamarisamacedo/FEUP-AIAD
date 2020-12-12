@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public class Truck extends Vehicle {
 
     public Truck() {
@@ -6,5 +8,6 @@ public class Truck extends Vehicle {
         this.baseSpeed = 50;
         this.cost = 40;
         this.type = "Truck";
+        this.color = Color.GRAY;
     }
 }

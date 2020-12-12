@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public class MailMan extends Vehicle {
     public MailMan() {
         super();
@@ -5,5 +7,6 @@ public class MailMan extends Vehicle {
         this.baseSpeed = 30;
         this.cost = 10;
         this.type = "MailMan";
+        this.color = Color.CYAN;
     }
 }

@@ -56,6 +56,10 @@ public class HelperClass {
         ArrayList<Item> items = new ArrayList<>();
         try {
             File myObj = new File(System.getProperty("user.dir") + "/" + filename);
+            if(!myObj.exists())
+            {
+                myObj = new File(System.getProperty("user.dir") + "/src/" + filename);
+            }
             Scanner myReader = new Scanner(myObj);
             String data = null;
             while (myReader.hasNextLine()) {
@@ -85,6 +89,12 @@ public class HelperClass {
 
         try {
             File myObj = new File(System.getProperty("user.dir") + "/" + filename);
+
+            if(!myObj.exists())
+            {
+                myObj = new File(System.getProperty("user.dir") + "/src/" + filename);
+            }
+
             Scanner myReader = new Scanner(myObj);
             String data = null;
             String stock = "";
