@@ -81,29 +81,27 @@ class Distributor {
 	public List<Pair<Order, Double>> allocateRegular(ArrayList<Order> orders, Location source) {
 
 		List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
+		Random random = new Random(System.currentTimeMillis());
 
+		ArrayList<Order> copy = (ArrayList<Order>)orders.clone();
 
-		int size = orders.size();
-		while (size > 0) {
+		ListIterator<Order> iter = copy.listIterator();
+		Order order = iter.next();
+		Vehicle vehicle = this.fleet.get(random.nextInt(this.fleet.size()));
 
-			Vehicle vehicle = this.fleet.get(size);
-			int occupancy = 0;
-
-			while (occupancy <= vehicle.getCapacity() && size > 0) {
-				ListIterator<Order> iter = orders.listIterator();
-				while (iter.hasNext()) {
-					Order currOrder = iter.next();
-					if (occupancy + currOrder.getWeight() <= vehicle.getCapacity()) {
-						vehicle.addOrder(currOrder);
-						occupancy += currOrder.getWeight();
-						iter.remove();
-						size--;
-					} else
-						continue;
-				}
-				break;
+		while(iter.hasNext())
+		{
+			if(vehicle.canPlace(order))
+			{
+				vehicle.addOrder(order);
+				order = iter.next();
+			}
+			else
+			{
+				vehicle = this.fleet.get(random.nextInt(this.fleet.size()));
 			}
 		}
+
 
 		for (int i = 0; i < this.fleet.size(); i++) {
 			if (this.getFleet().get(i).getOrders().size() > 0) {
@@ -253,7 +251,7 @@ class Distributor {
 				String print = String.format(
 						"Vehicle %s (%s,capacity: %d) delivered from (Lat: %d Lon: %d) to (Lat: %d Lon: %d) in %d place and took %f time;",
 						v.getId(), v.getType(), v.capacity, source.getLat(), source.getLon(), currLoc.getLat(), currLoc.getLon(), count, time);
-				System.out.println(this.method + "-                     " + time);
+				//System.out.println(this.method + "-                     " + time);
 				time_per_order.add(new Pair<Order, Double>(v.getOrders().get(min), time));
 				v.addLocationToPath(v.getOrders().get(min).getLocation());
 			}

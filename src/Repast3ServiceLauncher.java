@@ -7,7 +7,6 @@ import sajas.wrapper.ContainerController;
 import uchicago.src.reflector.ListPropertyDescriptor;
 import uchicago.src.reflector.RangePropertyDescriptor;
 import uchicago.src.sim.analysis.OpenSequenceGraph;
-import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
@@ -309,58 +308,58 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		plot.setYRange(0, 1000);
 		plot.setAxisTitles("time", "Total delivery time");
 
-		plot.addSequence("Regular", new Sequence() {
-			public double getSValue() {
-				double maxTime=Double.MIN_VALUE;
-				List<Pair<Order, Double>> timeRegular = dAgent.getTimeRegular();
-				for(int i = 0; i < timeRegular.size(); i++) {
-					if(timeRegular.get(i).getSecond() > maxTime) {
-						maxTime= timeRegular.get(i).getSecond();
-					}
-				}
-				System.out.println("REGULAR "+ maxTime);
-				return maxTime;
-			  }
-		});
-		plot.addSequence("Even", new Sequence() {
-			public double getSValue() {
-				double maxTime=Double.MIN_VALUE;
-				List<Pair<Order, Double>> timeEven = dAgent.getTimeEven();
-				for(int i = 0; i < timeEven.size(); i++) {
-					if(timeEven.get(i).getSecond() > maxTime) {
-						maxTime = timeEven.get(i).getSecond();
-					}
-				}
-				System.out.println("EVEN "+ maxTime);
-				return maxTime;
-			  }
-		});
-		plot.addSequence("Random", new Sequence() {
-			public double getSValue() {
-				double maxTimeRan=Double.MIN_VALUE;
-				List<Pair<Order, Double>> timeRandom = dAgent.getTimeRandom();
-				for(int i = 0; i < timeRandom.size(); i++) {
-					if(timeRandom.get(i).getSecond() > maxTimeRan) {
-						maxTimeRan = timeRandom.get(i).getSecond();
-					}
-				}
-				System.out.println("RANDOM "+ maxTimeRan);
-				return maxTimeRan;
-			  }
-		});
-		plot.addSequence("Reduce Cost", new Sequence() {
-			public double getSValue() {
-				double maxTimeRC=Double.MIN_VALUE;
-				List<Pair<Order, Double>> timeReduceCost = dAgent.getTimeReduceCost();
-				for(int i = 0; i < timeReduceCost.size(); i++) {
-					if(timeReduceCost.get(i).getSecond() > maxTimeRC) {
-						maxTimeRC = timeReduceCost.get(i).getSecond();
-					}
-				}
-				System.out.println("REDUCE "+ maxTimeRC);
-				return maxTimeRC;
-			  }
-		});
+//		plot.addSequence("Regular", new Sequence() {
+//			public double getSValue() {
+//				double maxTime=Double.MIN_VALUE;
+//				List<Pair<Order, Double>> timeRegular = dAgent.getTimeRegular();
+//				for(int i = 0; i < timeRegular.size(); i++) {
+//					if(timeRegular.get(i).getSecond() > maxTime) {
+//						maxTime= timeRegular.get(i).getSecond();
+//					}
+//				}
+//				System.out.println("REGULAR "+ maxTime);
+//				return maxTime;
+//			  }
+//		});
+//		plot.addSequence("Even", new Sequence() {
+//			public double getSValue() {
+//				double maxTime=Double.MIN_VALUE;
+//				List<Pair<Order, Double>> timeEven = dAgent.getTimeEven();
+//				for(int i = 0; i < timeEven.size(); i++) {
+//					if(timeEven.get(i).getSecond() > maxTime) {
+//						maxTime = timeEven.get(i).getSecond();
+//					}
+//				}
+//				System.out.println("EVEN "+ maxTime);
+//				return maxTime;
+//			  }
+//		});
+//		plot.addSequence("Random", new Sequence() {
+//			public double getSValue() {
+//				double maxTimeRan=Double.MIN_VALUE;
+//				List<Pair<Order, Double>> timeRandom = dAgent.getTimeRandom();
+//				for(int i = 0; i < timeRandom.size(); i++) {
+//					if(timeRandom.get(i).getSecond() > maxTimeRan) {
+//						maxTimeRan = timeRandom.get(i).getSecond();
+//					}
+//				}
+//				System.out.println("RANDOM "+ maxTimeRan);
+//				return maxTimeRan;
+//			  }
+//		});
+//		plot.addSequence("Reduce Cost", new Sequence() {
+//			public double getSValue() {
+//				double maxTimeRC=Double.MIN_VALUE;
+//				List<Pair<Order, Double>> timeReduceCost = dAgent.getTimeReduceCost();
+//				for(int i = 0; i < timeReduceCost.size(); i++) {
+//					if(timeReduceCost.get(i).getSecond() > maxTimeRC) {
+//						maxTimeRC = timeReduceCost.get(i).getSecond();
+//					}
+//				}
+//				System.out.println("REDUCE "+ maxTimeRC);
+//				return maxTimeRC;
+//			  }
+//		});
 		plot.display();
 		
 		getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
@@ -371,6 +370,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	public void step()
 	{
 		dAgent.moveVehicles();
+		System.out.println("COST: " + dAgent.getTotalTripsCost());
 	}
 
 
