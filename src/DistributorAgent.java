@@ -24,6 +24,7 @@ public class DistributorAgent extends Agent {
     private Location location;
     private ArrayList<Order> orders;
     private Location pickup;
+    private int nClients;
 
     public Location getLocation() {
         return location;
@@ -44,6 +45,7 @@ public class DistributorAgent extends Agent {
     public DistributorAgent(DistributorMethod method, int nrClients)
     {
         this.location = new Location(300, 300);
+        this.nClients = nrClients;
         this.distributor = new Distributor(new Location(300, 300), method, nrClients);
     }
 
@@ -74,23 +76,51 @@ public class DistributorAgent extends Agent {
     }
     
     public List<Pair<Order, Double>> getTimeRegular(){
-    	List<Pair<Order, Double>> time_order_regular = distributor.allocateRegular(orders, pickup);
+    	Distributor distributorRegular = new Distributor(new Location(300, 300), DistributorMethod.regular, this.nClients);
+    	List<Pair<Order, Double>> time_order_regular = distributorRegular.allocateRegular(orders, pickup);
     	return time_order_regular;
     }
     
     public List<Pair<Order, Double>> getTimeRandom(){
-    	List<Pair<Order, Double>> time_order_random = distributor.allocateRandom(orders, pickup);
+    	Distributor distributorRandom = new Distributor(new Location(300, 300), DistributorMethod.random, this.nClients);
+    	List<Pair<Order, Double>> time_order_random = distributorRandom.allocateRandom(orders, pickup);
     	return time_order_random;
     }
     
     public List<Pair<Order, Double>> getTimeEven(){
-    	List<Pair<Order, Double>> time_order_even = distributor.allocateEven(orders, pickup);
+    	Distributor distributorEven = new Distributor(new Location(300, 300), DistributorMethod.even, this.nClients);
+    	List<Pair<Order, Double>> time_order_even = distributorEven.allocateEven(orders, pickup);
     	return time_order_even;
     }
     
     public List<Pair<Order, Double>> getTimeReduceCost(){
-    	List<Pair<Order, Double>> time_order_reduce_cost = distributor.allocateReduceCost(orders, pickup);
+    	Distributor distributorRC = new Distributor(new Location(300, 300), DistributorMethod.reduceCost, this.nClients);
+    	List<Pair<Order, Double>> time_order_reduce_cost = distributorRC.allocateReduceCost(orders, pickup);
     	return time_order_reduce_cost;
+    }
+    
+    public double getCostRegular(){
+    	Distributor distributorRegular = new Distributor(new Location(300, 300), DistributorMethod.regular, this.nClients);
+    	List<Pair<Order, Double>> time_order_regular = distributorRegular.allocateRegular(orders, pickup);
+    	return distributorRegular.getTotalTripsCost();
+    }
+    
+    public double getCostRandom(){
+    	Distributor distributorRandom = new Distributor(new Location(300, 300), DistributorMethod.random, this.nClients);
+    	List<Pair<Order, Double>> time_order_random = distributorRandom.allocateRandom(orders, pickup);
+    	return distributorRandom.getTotalTripsCost();
+    }
+    
+    public double getCostEven(){
+    	Distributor distributorEven = new Distributor(new Location(300, 300), DistributorMethod.even, this.nClients);
+    	List<Pair<Order, Double>> time_order_even = distributorEven.allocateEven(orders, pickup);
+    	return distributorEven.getTotalTripsCost();
+    }
+    
+    public double getCostReduceCost(){
+    	Distributor distributorRC = new Distributor(new Location(300, 300), DistributorMethod.reduceCost, this.nClients);
+    	List<Pair<Order, Double>> time_order_reduce_cost = distributorRC.allocateReduceCost(orders, pickup);
+    	return distributorRC.getTotalTripsCost();
     }
 
     //Receives requests from the supplier

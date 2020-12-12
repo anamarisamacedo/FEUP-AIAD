@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
@@ -21,7 +22,6 @@ class Distributor {
 	}
 
 	public Distributor(Location location, DistributorMethod method, int nrClients) {
-		System.out.println("GFAFDGFHNKFZIRD"+ method);
 		generateVehicles(nrClients);
 		this.location = location;
 		this.method = method;
@@ -84,13 +84,14 @@ class Distributor {
 
 
 		int size = orders.size();
+		ArrayList<Order> copy = new ArrayList<>(orders);
 		while (size > 0) {
 
-			Vehicle vehicle = this.fleet.get(size);
+			Vehicle vehicle = this.fleet.get(size-1);
 			int occupancy = 0;
 
 			while (occupancy <= vehicle.getCapacity() && size > 0) {
-				ListIterator<Order> iter = orders.listIterator();
+				ListIterator<Order> iter = copy.listIterator();
 				while (iter.hasNext()) {
 					Order currOrder = iter.next();
 					if (occupancy + currOrder.getWeight() <= vehicle.getCapacity()) {
@@ -251,9 +252,8 @@ class Distributor {
 				double time = dist / v.baseSpeed();
 				count++;
 				String print = String.format(
-						"Vehicle %s (%s,capacity: %d) delivered from (Lat: %d Lon: %d) to (Lat: %d Lon: %d) in %d place and took %f time;",
-						v.getId(), v.getType(), v.capacity, source.getLat(), source.getLon(), currLoc.getLat(), currLoc.getLon(), count, time);
-				System.out.println(this.method + "-                     " + time);
+						"Method %s Vehicle %s (%s,capacity: %d) delivered from (Lat: %d Lon: %d) to (Lat: %d Lon: %d) in %d place and took %f time;",
+						method, v.getId(), v.getType(), v.capacity, source.getLat(), source.getLon(), currLoc.getLat(), currLoc.getLon(), count, time);
 				time_per_order.add(new Pair<Order, Double>(v.getOrders().get(min), time));
 				v.addLocationToPath(v.getOrders().get(min).getLocation());
 			}

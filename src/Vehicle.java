@@ -107,11 +107,7 @@ abstract class Vehicle {
     {
         if(this.path.peek() != null)
         {
-            this.totalTripCost = this.cost*location.distanceTo(this.path.peek());
-        }
-        else{
-            //if this is the first location added
-            this.totalTripCost = 0;
+            this.totalTripCost += this.cost*location.distanceTo(this.path.peek());
         }
         this.path.add(location);
     }
