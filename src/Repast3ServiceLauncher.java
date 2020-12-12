@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
+import org.geotools.data.MaxFeatureReader;
+
 public class Repast3ServiceLauncher extends Repast3Launcher {
 
 	private static final boolean BATCH_MODE = true;
@@ -313,29 +315,60 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 
 		plot.addSequence("Regular", new Sequence() {
 			public double getSValue() {
-				System.out.println("ENTROU");
-				double timeRegular = dAgent.getTimeRegular();
-			    return timeRegular;
+				double maxTime=Double.MIN_VALUE;
+				List<Pair<Order, Double>> timeRegular = dAgent.getTimeRegular();
+				for(int i = 0; i < timeRegular.size(); i++) {
+					if(timeRegular.get(i).getSecond() > maxTime) {
+						maxTime= timeRegular.get(i).getSecond();
+					}
+				}
+				System.out.println("REGULAR "+ maxTime);
+				return maxTime;
 			  }
 		});
 		plot.addSequence("Even", new Sequence() {
 			public double getSValue() {
-				System.out.println("ENTROU");
-				double timeEven = dAgent.getTimeEven();
-			    return timeEven;
+				double maxTime=Double.MIN_VALUE;
+				List<Pair<Order, Double>> timeEven = dAgent.getTimeEven();
+				for(int i = 0; i < timeEven.size(); i++) {
+					if(timeEven.get(i).getSecond() > maxTime) {
+						maxTime = timeEven.get(i).getSecond();
+					}
+				}
+				System.out.println("EVEN "+ maxTime);
+				return maxTime;
 			  }
 		});
 		plot.addSequence("Random", new Sequence() {
 			public double getSValue() {
-				System.out.println("ENTROU");
-				double timeRandom = dAgent.getTimeRandom();
-			    return timeRandom;
+				double maxTimeRan=Double.MIN_VALUE;
+				List<Pair<Order, Double>> timeRandom = dAgent.getTimeRandom();
+				for(int i = 0; i < timeRandom.size(); i++) {
+					if(timeRandom.get(i).getSecond() > maxTimeRan) {
+						maxTimeRan = timeRandom.get(i).getSecond();
+					}
+				}
+				System.out.println("RANDOM "+ maxTimeRan);
+				return maxTimeRan;
+			  }
+		});
+		plot.addSequence("Reduce Cost", new Sequence() {
+			public double getSValue() {
+				double maxTimeRC=Double.MIN_VALUE;
+				List<Pair<Order, Double>> timeReduceCost = dAgent.getTimeReduceCost();
+				for(int i = 0; i < timeReduceCost.size(); i++) {
+					if(timeReduceCost.get(i).getSecond() > maxTimeRC) {
+						maxTimeRC = timeReduceCost.get(i).getSecond();
+					}
+				}
+				System.out.println("REDUCE "+ maxTimeRC);
+				return maxTimeRC;
 			  }
 		});
 		plot.display();
 		
 		getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
-		getSchedule().scheduleActionAt(500, plot, "step", Schedule.LAST);
+		getSchedule().scheduleActionAtInterval(500, plot, "step", Schedule.LAST);
 		getSchedule().scheduleActionAtInterval(10, this, "step", Schedule.INTERVAL_UPDATER);
 	}
 

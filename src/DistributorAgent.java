@@ -73,22 +73,32 @@ public class DistributorAgent extends Agent {
         return this.myNode;
     }
     
-    public double getTimeRegular(){
-    	List<Pair<Order, Double>> time_order_regular = distributor.allocateRegular(orders, pickup);
+    public List<Pair<Order, Double>> getTimeRegular(){
+    	Distributor distributorRegular = new Distributor(new Location(300, 300), DistributorMethod.regular, 100);
+    	List<Pair<Order, Double>> time_order_regular = distributorRegular.allocateRegular(orders, pickup);
     	int size = time_order_regular.size();
-    	return time_order_regular.get(size-1).getSecond();
+    	return time_order_regular;
     }
     
-    public double getTimeRandom(){
-    	List<Pair<Order, Double>> time_order_random = distributor.allocateRandom(orders, pickup);
+    public List<Pair<Order, Double>> getTimeRandom(){
+    	Distributor distributorRandom = new Distributor(new Location(300, 300), DistributorMethod.random, 100);
+    	List<Pair<Order, Double>> time_order_random = distributorRandom.allocateRandom(orders, pickup);
     	int size = time_order_random.size();
-    	return time_order_random.get(size-1).getSecond();
+    	return time_order_random;
     }
     
-    public double getTimeEven(){
-    	List<Pair<Order, Double>> time_order_even = distributor.allocateEven(orders, pickup);
+    public List<Pair<Order, Double>> getTimeEven(){
+    	Distributor distributorEven = new Distributor(new Location(300, 300), DistributorMethod.even, 100);
+    	List<Pair<Order, Double>> time_order_even = distributorEven.allocateEven(orders, pickup);
     	int size = time_order_even.size();
-    	return time_order_even.get(size-1).getSecond();
+    	return time_order_even;
+    }
+    
+    public List<Pair<Order, Double>> getTimeReduceCost(){
+    	Distributor distributorRC = new Distributor(new Location(300, 300), DistributorMethod.reduceCost, 100);
+    	List<Pair<Order, Double>> time_order_reduce_cost = distributorRC.allocateReduceCost(orders, pickup);
+    	int size = time_order_reduce_cost.size();
+    	return time_order_reduce_cost;
     }
 
     //Receives requests from the supplier

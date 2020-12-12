@@ -19,6 +19,7 @@ class Distributor {
 	}
 
 	public Distributor(Location location, DistributorMethod method, int nrClients) {
+		System.out.println("GFAFDGFHNKFZIRD"+ method);
 		generateVehicles(nrClients);
 		this.location = location;
 		this.method = method;
@@ -106,7 +107,7 @@ class Distributor {
 				time_per_order.addAll(this.path(this.fleet.get(i), source));
 			}
 		}
-
+		
 		return time_per_order;
 	}
 
@@ -269,6 +270,7 @@ class Distributor {
 						"Vehicle %s (%s,capacity: %d) delivered from (Lat: %d Lon: %d) to (Lat: %d Lon: %d) in %d place and took %f time;",
 						v.getId(), v.getType(), v.capacity, source.getLat(), source.getLon(), currLoc.getLat(), currLoc.getLon(), count, time);
 				pw.println(print);
+				System.out.println(this.method + "-                     " + time);
 				time_per_order.add(new Pair<Order, Double>(v.getOrders().get(min), time));
 				v.addLocationToPath(v.getOrders().get(min).getLocation());
 			}
@@ -279,7 +281,7 @@ class Distributor {
 
 		if (pw != null)
 			pw.close();
-
+		
 		return time_per_order;
 	}
 
