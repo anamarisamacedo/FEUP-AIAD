@@ -23,6 +23,10 @@ abstract class Vehicle {
     private int id;
     //current location
     protected Location location;
+    //cost per time
+    protected double cost;
+    //total cost of trip scheduled
+    protected double totalTripCost;
     DefaultDrawableNode myNode;
 
     public Vehicle() {
@@ -101,12 +105,35 @@ abstract class Vehicle {
     //vehicle will follow the exact order of path
     public void addLocationToPath(Location location)
     {
+        if(this.path.peek() != null)
+        {
+            this.totalTripCost = this.cost*location.distanceTo(this.path.peek());
+        }
+        else{
+            //if this is the first location added
+            this.totalTripCost = 0;
+        }
         this.path.add(location);
     }
 
     public Location getNextStop()
     {
         return this.path.peek();
+    }
+
+    public double getTotalTripCost()
+    {
+        return this.totalTripCost;
+    }
+
+    public double getCost()
+    {
+        return this.cost;
+    }
+
+    public boolean canPlace(Order order)
+    {
+        return this.getCapacityOccupied() + order.getWeight() <= this.capacity;
     }
 
     public void moveVehicle()

@@ -41,11 +41,10 @@ public class DistributorAgent extends Agent {
         HelperClass.registerAgent(this, "Distributor");
     }
 
-    //TODO: Receive argument to determine which algorithm to use for the allocation
-    public DistributorAgent(DistributorMethod method)
+    public DistributorAgent(DistributorMethod method, int nrClients)
     {
         this.location = new Location(300, 300);
-        this.distributor = new Distributor(new Location(300, 300), method);
+        this.distributor = new Distributor(new Location(300, 300), method, nrClients);
     }
 
     public List<Vehicle> getFleet()
@@ -61,6 +60,11 @@ public class DistributorAgent extends Agent {
         }
     }
 
+    public double getTotalTripsCost()
+    {
+        return distributor.getTotalTripsCost();
+    }
+
     public void setNode(DefaultDrawableNode node) {
         this.myNode = node;
     }
@@ -68,31 +72,23 @@ public class DistributorAgent extends Agent {
     public DefaultDrawableNode getNode() {
         return this.myNode;
     }
-
-    //TODO: delete this
-    public void nextPos()
-    {
-        myNode.setX(myNode.getX() + 1);
-        myNode.setY(myNode.getY() + 1);
-    }
     
     public double getTimeRegular(){
-    	List<Pair<Order, Double>> time_per_order = distributor.allocateRegular(orders, pickup);
-    	int size = time_per_order.size();
-    	System.out.println(time_per_order.get(size-1).getFirst());
-    	return time_per_order.get(size-1).getSecond();
+    	List<Pair<Order, Double>> time_order_regular = distributor.allocateRegular(orders, pickup);
+    	int size = time_order_regular.size();
+    	return time_order_regular.get(size-1).getSecond();
     }
     
     public double getTimeRandom(){
-    	List<Pair<Order, Double>> time_per_order = distributor.allocateRandom(orders, pickup);
-    	int size = time_per_order.size();
-    	return time_per_order.get(size-1).getSecond();
+    	List<Pair<Order, Double>> time_order_random = distributor.allocateRandom(orders, pickup);
+    	int size = time_order_random.size();
+    	return time_order_random.get(size-1).getSecond();
     }
     
     public double getTimeEven(){
-    	List<Pair<Order, Double>> time_per_order = distributor.allocateEven(orders, pickup);
-    	int size = time_per_order.size();
-    	return time_per_order.get(size-1).getSecond();
+    	List<Pair<Order, Double>> time_order_even = distributor.allocateEven(orders, pickup);
+    	int size = time_order_even.size();
+    	return time_order_even.get(size-1).getSecond();
     }
 
     //Receives requests from the supplier
@@ -111,7 +107,7 @@ public class DistributorAgent extends Agent {
 
                 time_per_order = distributor.allocate(orders, pickup);
                 
-                addBehaviour( new FIPARequestClientInit(distAgent, new ACLMessage(ACLMessage.REQUEST)));
+                addBehaviour(new FIPARequestClientInit(distAgent, new ACLMessage(ACLMessage.REQUEST)));
 
             } catch (UnreadableException e) {
                 e.printStackTrace();

@@ -4,6 +4,7 @@ public class Truck extends Vehicle {
         super();
         this.capacity = 2000;
         this.baseSpeed = 50;
+        this.cost = 40;
         this.type = "Truck";
     }
 }

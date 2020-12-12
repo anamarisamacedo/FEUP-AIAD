@@ -22,7 +22,6 @@ import uchicago.src.sim.network.DefaultDrawableNode;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
@@ -31,7 +30,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 
 	private static final boolean BATCH_MODE = true;
 
-	private int N_CLIENTS = 10;
+	private int N_CLIENTS = 100;
 	private int SUPPLIER_LAT_1 = 500;
 	private int SUPPLIER_LON_1 = 500;
 	private int SUPPLIER_LAT_2 = 500;
@@ -48,6 +47,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	private ContainerController mainContainer;
 	private ContainerController agentContainer;
 	private List<ClientAgent> clients;
+	private List<DistributorAgent> distributors;
 	private List<Location> pickupLocations;
 	private boolean fleetReady;
 
@@ -174,7 +174,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		
 		try{
 			//Create Distributor
-			dAgent = new DistributorAgent(ALLOCATION);
+			dAgent = new DistributorAgent(ALLOCATION, N_CLIENTS);
 			dAgent.setLocation(new Location(300, 300));
 			agentContainer.acceptNewAgent("Distributor", dAgent).start();
 			DefaultDrawableNode nodeDistr =
@@ -264,7 +264,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 	public void setup() {
 		super.setup();
 
-		descriptors.put("N_CLIENTS", new RangePropertyDescriptor("N_CLIENTS", 5, 15, 2));
+		descriptors.put("N_CLIENTS", new RangePropertyDescriptor("N_CLIENTS", 10, 150, 28));
 		descriptors.put("SUPPLIER_LAT_1", new RangePropertyDescriptor("SUPPLIER_LAT_1", 0, 1000, 200));
 		descriptors.put("SUPPLIER_LON_1", new RangePropertyDescriptor("SUPPLIER_LON_1", 0, 1000, 200));
 		descriptors.put("SUPPLIER_LAT_2", new RangePropertyDescriptor("SUPPLIER_LAT_2", 0, 1000, 200));
@@ -275,9 +275,8 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		v.add(DistributorMethod.regular);
 		v.add(DistributorMethod.even);
 		v.add(DistributorMethod.random);
+		v.add(DistributorMethod.reduceCost);
 		descriptors.put("ALLOCATION", new ListPropertyDescriptor("ALLOCATION", v));
-
-		
 	}
 
 
@@ -291,7 +290,7 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 
 	private DisplaySurface dsurf;
 	private int WIDTH = 1200, HEIGHT = 1200;
-	private OpenHistogram hist;
+	private OpenSequenceGraph plot;
 
 	private void buildAndScheduleDisplay() {
 		// display surface
@@ -305,26 +304,43 @@ public class Repast3ServiceLauncher extends Repast3Launcher {
 		dsurf.display();
 
 		// graph
-		if (hist != null) hist.dispose();
-		hist = new OpenHistogram("Distributor Allocation", N_CLIENTS, 0);
-		hist.setYRange(0, 30000);
-		BinDataSource source = new BinDataSource()  {
-		  public double getBinValue(Object o) {
-		    DistributorAgent agent = (DistributorAgent)o;
-		    return agent.getTimeRegular();
-		  }
-		};
+		if (plot != null) plot.dispose();
+		plot = new OpenSequenceGraph("Delivery Time/ Allocation Method", this);
 
-		hist.createHistogramItem("Wealth", clients, source);
-		hist.display();
+		plot.setXRange(0, 1000);
+		plot.setYRange(0, 1000);
+		plot.setAxisTitles("time", "Total delivery time");
+
+		plot.addSequence("Regular", new Sequence() {
+			public double getSValue() {
+				System.out.println("ENTROU");
+				double timeRegular = dAgent.getTimeRegular();
+			    return timeRegular;
+			  }
+		});
+		plot.addSequence("Even", new Sequence() {
+			public double getSValue() {
+				System.out.println("ENTROU");
+				double timeEven = dAgent.getTimeEven();
+			    return timeEven;
+			  }
+		});
+		plot.addSequence("Random", new Sequence() {
+			public double getSValue() {
+				System.out.println("ENTROU");
+				double timeRandom = dAgent.getTimeRandom();
+			    return timeRandom;
+			  }
+		});
+		plot.display();
 		
 		getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
+		getSchedule().scheduleActionAt(500, plot, "step", Schedule.LAST);
 		getSchedule().scheduleActionAtInterval(10, this, "step", Schedule.INTERVAL_UPDATER);
 	}
 
 	public void step()
 	{
-		//dAgent.nextPos();
 		dAgent.moveVehicles();
 	}
 

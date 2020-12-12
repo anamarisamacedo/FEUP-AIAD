@@ -56,7 +56,7 @@ public class HelperClass {
     {
         ArrayList<Item> items = new ArrayList<>();
         try {
-            File myObj = new File(System.getProperty("user.dir") + "/src/" + filename);
+            File myObj = new File(System.getProperty("user.dir") + "/" + filename);
             Scanner myReader = new Scanner(myObj);
             String data = null;
             while (myReader.hasNextLine()) {
@@ -85,7 +85,7 @@ public class HelperClass {
         ArrayList<Pair<Item, Integer>> items = new ArrayList<>();
 
         try {
-            File myObj = new File(System.getProperty("user.dir") + "/src/" + filename);
+            File myObj = new File(System.getProperty("user.dir") + "/" + filename);
             Scanner myReader = new Scanner(myObj);
             String data = null;
             String stock = "";
