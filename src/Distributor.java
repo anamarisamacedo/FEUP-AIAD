@@ -1,5 +1,7 @@
-import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Random;
 
 class Distributor {
 
@@ -79,6 +81,7 @@ class Distributor {
 	public List<Pair<Order, Double>> allocateRegular(ArrayList<Order> orders, Location source) {
 
 		List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
+
 
 		int size = orders.size();
 		while (size > 0) {
@@ -228,25 +231,6 @@ class Distributor {
 		// annexing a double time to each order
 		List<Pair<Order, Double>> time_per_order = new ArrayList<Pair<Order, Double>>();
 
-		PrintWriter pw = null;
-		String fName = String.format("vehicle%s.txt", v.getId());
-
-		try {
-			File file = new File(fName);
-			if (file.createNewFile()) {
-
-				System.out.println("File has been created.");
-			} else {
-
-				System.out.println("File already exists.");
-			}
-
-			FileWriter fw = new FileWriter(file, true);
-			pw = new PrintWriter(fw);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 		while (!finalized(visited)) {
 			int i = 0, min = 0;
 			double distTo = Integer.MAX_VALUE;
@@ -269,7 +253,6 @@ class Distributor {
 				String print = String.format(
 						"Vehicle %s (%s,capacity: %d) delivered from (Lat: %d Lon: %d) to (Lat: %d Lon: %d) in %d place and took %f time;",
 						v.getId(), v.getType(), v.capacity, source.getLat(), source.getLon(), currLoc.getLat(), currLoc.getLon(), count, time);
-				pw.println(print);
 				System.out.println(this.method + "-                     " + time);
 				time_per_order.add(new Pair<Order, Double>(v.getOrders().get(min), time));
 				v.addLocationToPath(v.getOrders().get(min).getLocation());
@@ -279,9 +262,6 @@ class Distributor {
 		//Last location of the vehicle is the distributor's location
 		v.addLocationToPath(this.location);
 
-		if (pw != null)
-			pw.close();
-		
 		return time_per_order;
 	}
 

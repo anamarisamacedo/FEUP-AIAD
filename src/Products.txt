@@ -1,14 +1,14 @@
 Sony ZV1 Camera
-0
+20
 5
 Canon DSLR Camera
 21
 5
 Canon EOS Rebel
-7
+70
 4
 TV SAMSUNG UE43TU7005
-0
+30
 10
 TV LG 43UN7100
 35
@@ -29,16 +29,16 @@ Smartphone SAMSUNG Galaxy A20e
 12
 4
 Smartphone SAMSUNG Galaxy A20s
-2
+20
 3
 iPhone 11
 42
 3
 iPhone 11 Pro Max
-4
+40
 5
 iPhone SE
-4
+40
 5
 iPhone 7
 85
@@ -47,13 +47,13 @@ iPhone 8 Plus
 54
 5
 Smartphone HUAWEI P40 Lite
-3
+30
 3
 Smartphone HUAWEI P40 Pro
-9
+90
 3
 Smartphone HUAWEI Y5 P
-13
+130
 4
 Smartphone HUAWEI P30 Lite
 43
@@ -71,16 +71,16 @@ APPLE Watch SE
 74
 2
 APPLE Watch Nike S5
-1
+10
 2
 Jogo PS5 NBA 2K21
-7
+70
 1
 Jogo PS5 Godfall
-7
+70
 1
 Jogo PS5 Fortnite
-8
+80
 1
 Jogo PS5 Far Cry 6
 21
@@ -95,7 +95,7 @@ Consola PS4 Pro
 32
 9
 Consola PS5
-7
+70
 9
 Consola PS4 Pro 500M
 82

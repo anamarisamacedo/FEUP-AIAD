@@ -1,15 +1,11 @@
-import jade.core.AID;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
-import jade.lang.acl.ACLMessage;
 import jade.wrapper.StaleProxyException;
 import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
 import uchicago.src.reflector.ListPropertyDescriptor;
 import uchicago.src.reflector.RangePropertyDescriptor;
-import uchicago.src.sim.analysis.BinDataSource;
-import uchicago.src.sim.analysis.OpenHistogram;
 import uchicago.src.sim.analysis.OpenSequenceGraph;
 import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.Schedule;
@@ -26,7 +22,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-import org.geotools.data.MaxFeatureReader;
+//import org.geotools.data.MaxFeatureReader;
 
 public class Repast3ServiceLauncher extends Repast3Launcher {
 
